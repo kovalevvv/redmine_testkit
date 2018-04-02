@@ -1,0 +1,13 @@
+ru:
+  label_testkit: Тестирование
+  label_testkits: Тестовые наборы
+  label_testcases: Тест-кейсы
+  label_testkit_envs: Окружения
+  label_reports: Отчеты
+  label_archive: Архив
+  field_testkit_client_env: Окружение клиента
+  field_testkit_env: Площадка тестирования
+  field_issue_ids: 'Задачи #'
+  field_version_ids: Сборка
+  project_module_testkit: Тестирование (Бета)
+  

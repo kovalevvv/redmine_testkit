@@ -1,0 +1,41 @@
+div.thumbnails {
+  margin-left: 0px;
+}
+
+.pass_style {
+  background-color: green;
+  color: #FFFFFF;
+}
+
+.fail_style {
+  background-color: red;
+}
+
+.blocked_style {
+  background-color: black;
+  color: #FFFFFF;
+}
+
+.not_run_style {
+  background-color: darkgray;
+}
+
+.testkit_select_style {
+  font-size: 20px;
+}
+
+.in_width {
+  width: 300px;
+}
+
+.testkit_step_border {
+  border:none;
+}
+
+.testkit_step_border {
+  border: 2px solid #e4e4e4;
+}
+
+.testkit_step_border:hover {
+  border: 2px solid orange;
+}

@@ -1,0 +1,28 @@
+<h2>Тест-кейсы</h2>
+<%= render 'testkits/tabs' %>
+<% if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
+  <%= link_to 'Добавить папку', new_project_testcase_folder_path, :class => 'icon icon-folder', :remote => :true %>
+  <%= link_to 'Добавить тест-кейс', new_project_testcase_path(testcase: { folder_id: nil }), :class => 'icon icon-add' %>
+<br /><br />
+<% end %>
+<%= form_tag({}) do -%>
+<div id="testcases" style="max-width: 1800px;" class="content">
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(function() {
+  $('#testcases').fancytree({
+    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
+  })
+})
+<% end %>
+
+<%= javascript_tag do %>
+  $(function() { contextMenuInit('<%= node_menu_project_testcase_folders_path %>') })
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'jquery.fancytree-all.min', 'context_menu_testkit', :plugin => 'redmine_testkit' %>
+  <%= stylesheet_link_tag 'ui.fancytree.min', :plugin => 'redmine_testkit' %>
+  <%= stylesheet_link_tag 'context_menu' %>
+<% end %>

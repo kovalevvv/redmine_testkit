@@ -1,0 +1,232 @@
+<h2>Тестируем: <%= @run.name %></h2>
+<%= render 'tabs' %>
+<div class="content">
+<%= error_messages_for @run %>
+<div class="box" style="background: #FFD;">
+  <p>
+    <strong>Создал тестирование:</strong> <%= @run.author %> <strong>в</strong> <%= format_time(@run.created_at) %>
+  </p>
+  <p>
+    <strong>Клиент:</strong> <%= @run.client_env %>
+  </p>
+  <p>
+    <strong>Сервер:</strong> <%= @run.env %>
+  </p>
+  <p>
+    <strong>Описание:</strong> <%= @run.description %>
+  </p>
+  <p>
+    <strong>Связанные задачи:</strong> <%= @run.issues.present? ? @run.issues.collect {|i| "##{i.id}"}.join(', ') : 'Отсутствуют' %>
+  </p>
+  <p>
+    <strong>Сборки:</strong> <%= @run.versions.present? ? @run.versions.collect {|v| "#{v.name}"}.join('<br /> ') : 'Отсутствуют' %>
+  </p>
+<%= form_for(@run, url: project_testkit_pass_run_path, html: {id: 'pass_run_form'}) do |f| %>
+  <% @run.testcases.each_with_index do |testcase,i| %>
+    <%= f.fields_for :testcases, testcase do |tf| %>
+    <fieldset style="margin-bottom: 10px; background: white;">
+    <h2><%= "#{i+1}. #{testcase.name.mb_chars.capitalize}" %></h2>
+      <% if testcase.description.present? %>
+        <p><%= testcase.description %></p>
+      <% end %>
+      <% if testcase.attachments.present? %>
+        <%= link_to_attachments testcase, :thumbnails => false %>
+      <% end %>
+      <table class="list">
+        <tr class="group">
+          <td onclick="toggleRowGroup(this);" style="cursor: pointer;">
+            <span class="expander">&nbsp;</span>&nbsp;Шаги<span class="count"><%= testcase.steps.count %></span>
+            <a href="#" onclick="return false;" class="toggle-all">Свернуть/Развернуть</a>
+          </td>
+        </tr>
+        <tr style="display: none;">
+          <td>
+          <% testcase.steps.each_with_index do |step,i| %>
+            <%= tf.fields_for :steps, step do |sf| %>
+            <div class="testkit_step_border">
+              <table class="list" style="font-size: 90%;">
+                <tr align="left">
+                  <th style="color: red;">Шаг <%= i+1 %></th>
+                  <th>Ожидаемый результат</th>
+                  <th>Статус</th>
+                </tr>
+                <tr align="left">
+                  <td width="49%"><%= step.if %></td>
+                  <td width="49%"><%= step.then %></td>
+                  <td width="4%"><%= sf.select :status, Testcase.status_list.collect { |s| [s.capitalize, s, { :class => "#{s}_style" }] }, {}, :class => 'testkit_select_style step_select' %></td>
+                </tr>
+                <tr>
+                  <th colspan="3" align="left">Результат</th>
+                </tr>
+                <tr>
+                  <td colspan="3" align="center"><%= sf.text_area :result, :style => "width: 99%;" %></td>
+                </tr>
+                <tr>
+                  <th colspan="3" align="left">Файлы к шагу</th>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div id="step_<%= step.id %>"><%= render :partial => 'testcase_steps/step', 
+                    :locals => { step: step, attachments: step.attachments,
+                      options: { editable: true, deletable: true, author: true },
+                      thumbnails: Setting.thumbnails_enabled? } %></div>
+                    <div style="margin-top: 5px;"><%= link_to 'Добавить файл', project_upload_file_to_step_path(project_id: @project.identifier, testcase_step_id: step.id), :remote => true, :class => 'icon icon-add' %></div>
+                  </td>
+                </tr>
+              </table></div>
+            <% end %>
+          <% end %>
+          </td>
+        </tr>
+      </table>  
+      Результат тест-кейса: <%= tf.select :status, Testcase.status_list.collect { |s| [s.capitalize, s, { :class => "#{s}_style" }] }, { include_blank: true }, :class => "testkit_select_style testcase_select" %>
+      </fieldset>
+    <% end %>
+  <% end %>
+  <fieldset class="collapsible collapsed">
+    <legend onclick="toggleFieldset(this);">Опции</legend>
+    <div style="display: none;">
+      <%= check_box_tag 'force_save' %>Завершить тестирование<br/>
+      <%= check_box_tag 'autosave', cookies[:testkit_autosave], [nil, "true"].include?(cookies[:testkit_autosave]) ? true : false %>Autosave<br/>
+    </div>
+  </fieldset>
+  <fieldset class="collapsible collapsed">
+    <legend onclick="toggleFieldset(this);">Комментарий</legend>
+    <div style="display: none;"><%= f.text_area :comment, style: "width: 100%; height: 100px;" %></div>
+  </fieldset>
+  <div style="text-align: right; color: lightgrey;">
+    <span>Сохранено <span id="timer" time="<%= @run.updated_at.localtime.strftime("%Y,%m,%d,%H,%M,%S") %>"></span></span>
+  </div>
+  
+  <div style="text-align: right;"><%= f.submit @run.check_done? ? "Завершить тестирование" : l(:button_save), :id => 'submit' %></div>
+<% end %>
+</div>
+</div>
+<%= javascript_tag do %>
+  (function(){
+  $('.testcase_select').change(function() {
+    if ($(this).val() == "pass") {
+      $(this).closest('fieldset').find('select.step_select').each(function () {
+        $(this).val("pass")
+      });
+    }
+  var tks = $('.testcase_select').map(function() { return $(this).val() }).get()
+  if ($.inArray("", tks) === -1) {
+    $('#submit').val("Завершить тестирование")
+  } else {
+    $('#submit').val("Сохранить")
+  }
+  })})();
+
+  (function(){
+    setInterval(function() {
+      if ($('#autosave').prop('checked')) {
+        $.ajax({
+          type: "POST",
+          url: "<%= project_testkit_pass_run_path %>",
+          data: $("#pass_run_form").serialize(),
+          dataType: "script",
+          success: function(data) { }
+        });
+      }
+    }, 60 * 1000);
+  })();
+
+  (function(){
+    $('#autosave').click(function() {
+      $.cookie("testkit_autosave", $(this).prop('checked'))
+    })
+    $('#force_save').click(function() {
+      if ($(this).prop('checked')) {
+       $('#submit').val("Завершить тестирование")
+      } else {
+        var tks = $('.testcase_select').map(function() { return $(this).val() }).get()
+        if ($.inArray("", tks) === -1) {
+          $('#submit').val("Завершить тестирование")
+        } else {
+          $('#submit').val("Сохранить")
+        }
+      }
+    })
+  })();
+<% end %>
+<%= javascript_tag do %>
+jQuery.fn.timeUpdate = function (filter,pole,intarval, options) {
+  var options = jQuery.extend({
+   lang: {
+    years:   ['год', 'года', 'лет'],
+    months:  ['месяц', 'месяца', 'месяцев'],
+    days:    ['день', 'дня', 'дней'],
+    hours:   ['час', 'часа', 'часов'],
+    minutes: ['минута', 'минуты', 'минут'],
+    seconds: ['секунда', 'секунды', 'секунд'],
+    plurar:  function(n) { 
+           return (n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2); }
+   },
+   end: " назад",
+   tolkochto:"только что"
+  }, options);
+  
+   var timeDifference = function(end, begin) {
+    if (end < begin) return false;
+      var difference = {
+       seconds: [end.getSeconds() - begin.getSeconds(), 60],
+       minutes: [end.getMinutes() - begin.getMinutes(), 60],
+       hours:   [end.getHours()   - begin.getHours()  , 24],
+       days:    [end.getDate()    - begin.getDate()   , new Date(begin.getYear(), begin.getMonth() + 1, 0).getDate()],
+       months:  [end.getMonth()   - begin.getMonth()  , 12],
+       years:   [end.getYear()    - begin.getYear()   , 0]
+      };
+    if(difference.years[0]!=  0    ){ 
+         delete (difference.days);   
+         delete (difference.hours);   
+         delete (difference.minutes);
+         delete (difference.seconds); }
+    else if(difference.months[0]!=0){ 
+         delete (difference.hours);  
+         delete (difference.minutes); 
+         delete (difference.seconds); }
+    else if(difference.days[0]!=0  ){ 
+         delete (difference.minutes);
+         delete (difference.seconds); }
+    else if(difference.hours[0]!=0 ) 
+         delete (difference.seconds); 
+      var result = new Array();
+      var flag = false;
+      for (i in difference) {
+       if (flag) {
+        difference[i][0]--;
+        flag = false;
+       }     
+       if (difference[i][0] < 0) {
+        flag = true;
+        difference[i][0] += difference[i][1];
+       }
+       if (!difference[i][0]) continue;
+       result.push(difference[i][0] + ' ' + options.lang[i][options.lang.plurar(difference[i][0])]);
+      }
+      return result.reverse().join(' ');
+  };
+  var timeUpdate = function () {
+      var need_to_time_update=$(filter);
+     if(need_to_time_update.size()>0){
+      need_to_time_update.each(function(i){
+      var date=need_to_time_update.eq(i).attr(pole).toString().split(",");
+      var s = timeDifference(new Date(), new Date(date[0],date[1]-1,date[2],date[3],date[4],date[5]));
+        if (s.length) need_to_time_update.eq(i).html(s+options.end); 
+             else need_to_time_update.eq(i).html(options.tolkochto);
+      });
+     }
+  };
+  timeUpdate();
+  var timer = setInterval(timeUpdate, intarval);
+ };
+
+  (function() {
+    $('#timer').timeUpdate('#timer','time',1000);
+  }
+  )()
+<% end %>
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'attachments' %>
+<% end %>

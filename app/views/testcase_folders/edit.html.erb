@@ -1,0 +1,4 @@
+<%= error_messages_for @folder %>
+<%= form_for @folder, url: project_testcase_folder_path do |f| %>
+  <%= render :partial => 'form', locals: { f: f } %>
+<% end %>

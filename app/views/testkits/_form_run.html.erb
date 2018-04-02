@@ -1,0 +1,70 @@
+<div class="box tabular">
+  <p>
+    <%= f.label :name %>
+    <%= f.text_field :name, style: "width: 77%;" %> <br />
+  </p>
+  <p>
+    <%= f.label :description %>
+    <%= f.text_area :description, style: "width: 77%; height: 100px;" %> <br />
+  </p>
+  <p>
+    <%= f.label :client_env %>
+    <%= f.select(:client_env, @client_envs, {:prompt => true}, {:class => "in_width"}) %>
+  </p>
+  <p>
+    <%= f.label :env %>
+    <%= f.select(:env, @server_envs, {:prompt => true}, {:class => "in_width"}) %>
+  </p>
+  <p>
+    <%= f.label :issue_ids %>
+    <% @testkit.issues.each do |issue| %>
+      <%= text_field_tag :'testkit[issue_ids][]', issue.id, :class => "relation_issue_field" %><br>
+    <% end %>
+    <%= text_field_tag :'testkit[issue_ids][]', nil, :class => "relation_issue_field" %><br>
+    <small><%= link_to 'Добавить', '#', {:class => 'icon icon-add', :id => 'add_issue_relation_field'} %></small>
+    <br />
+  </p>
+  <p>
+    <%= f.label :version_ids %>
+    <% if @versions.present? %>
+      <%= f.collection_select :version_ids, @versions, :id, :name, {:include_blank => true}, :class => "in_width" %>
+    <% else %>c
+      Нет сборок
+    <% end %>
+  </p>
+  <p>
+    <%= f.label :assigned_to_id %>
+    <%= f.collection_select :assigned_to_id, @testkit.assignable_users, :id, :name, {:selected => @testkit.assigned_to ? @testkit.assigned_to_id : @testkit.author_id}, :class => "in_width"  %>
+  </p>
+</div>
+
+<%= javascript_tag do %>
+function observeAutocompleteFieldTestkit(element) {
+  $(document).ready(function() {
+    element.autocomplete($.extend({
+      source: <%= "'#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => Setting.cross_project_subtasks)}'".html_safe %>,
+      minLength: 2,
+      search: function(){$('#ajax-indicator').show();},
+      response: function(){$('#ajax-indicator').hide();}
+    }));
+    element.addClass('autocomplete');
+  });
+}
+
+observeAutocompleteFieldTestkit($('.relation_issue_field'));
+
+$(document).ready(function() {
+  $('#add_issue_relation_field').click(function() {
+    $("<%= j text_field_tag :'testkit[issue_ids][]', nil, :class => 'relation_issue_field' %><br>").insertAfter($('.relation_issue_field:last').next());
+    observeAutocompleteFieldTestkit($('.relation_issue_field:last'));
+    return false;
+  });
+});
+
+$(document).ready(function() {
+  $('#testkit_client_env').select2({theme: "classic"});
+  $('#testkit_env').select2({theme: "classic"});
+  $('#testkit_version_ids').select2({theme: "classic"});
+  $('#testkit_assigned_to_id').select2({theme: "classic"});
+});
+<% end %>

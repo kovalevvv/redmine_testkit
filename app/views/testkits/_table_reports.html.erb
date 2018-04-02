@@ -1,0 +1,24 @@
+<table class="list">
+  <thead>
+    <th>Название</th>
+    <th>Завершено</th>
+    <th>Тестировалось</th>
+    <th>Выполнил</th>
+    <th>Окружения</th>
+    <th>Результат</th>
+    <th>Задачи</th>
+    <th>Сборки</th>
+  </thead>
+    <% reports.each do |report| %>
+      <tr>
+        <td><%= link_to report.name, project_testkit_report_path(testkit_id: report.id, project_id: @project.id) %></td>
+        <td align="center"><%= format_time(report.done_date) %></td>
+        <td align="center"><%= distance_of_time_in_words(report.start_date, report.done_date) %></td>
+        <td align="center"><%= link_to(report.user_end, report.user_end) %></td>
+        <td>Клиент: <%= report.client_env %><br />Сервер: <%= report.env %></td>
+        <td><%= report.report_result.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></td>
+        <td align="center"><%= report.issues.collect {|i| link_to("##{i.id}", i) }.join(', ').html_safe %></td>
+        <td align="center"><%= report.versions.collect {|v| link_to(v.name,v) }.join.html_safe %></td>
+      </tr>
+    <% end %>
+</table>

@@ -1,0 +1,22 @@
+<h3 class="title">Добавить окружение</h3>
+<%= error_messages_for @env %>
+<%= form_for @env, url: project_testkit_envs_path do |f| %>
+  <%= render :partial => 'form', locals: { f: f } %>
+<% end %>
+<div>
+<small style="font-style: italic;">
+  <% if @env.env_type == "client" %>
+    Windows 8.1 SP3; Firefox 49<br/>
+    Debian 9, KDE 5; Chrome 234.1<br/>
+    Huawey Next; Android 5; Native browser<br/>
+    iPhone SE; Chrome<br/>
+    ...
+  <% end %>
+  <% if @env.env_type == "server" %>
+    RHEL 8.1; Тестовый контур<br/>
+    Windows Server 2025; Предпрод<br/>
+    Продуктив<br/>
+    ...
+  <% end %>
+</small>
+</div>

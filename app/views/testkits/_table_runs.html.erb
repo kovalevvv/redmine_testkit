@@ -1,0 +1,42 @@
+<table class="list">
+  <thead>
+    <th>Название</th>
+    <th>Создано</th>
+    <th>В тестировании</th>
+    <th>Назначена</th>
+    <th>Окружения</th>
+    <th>Задачи</th>
+    <th>Сборка</th>
+    <% if User.current.allowed_to?(:pass_runs, @project) %>
+      <th width="10px"></th>
+    <% end %>
+    <th width="10px"></th>
+    <% if User.current.allowed_to?(:delete_runs, @project) %>
+      <th width="10px"></th>
+    <% end %>
+  </thead>
+  <% if runs.present? %>
+    <% runs.each do |run| %>
+      <tr>
+        <td><%= run.name %></td>
+        <td align="center"><%= format_time(run.created_at) %></td>
+        <td align="center"><%= run.start_date ? distance_of_time_in_words(run.start_date, DateTime.now) + ' c ' + format_time(run.start_date) : 'Не начиналось' %></td>
+        <td align="center"><%= link_to(run.assigned_to, run.assigned_to) %></td>
+        <td>Клиент: <%= run.client_env %><br />Сервер: <%= run.env %></td>
+        <td align="center"><%= run.issues.collect {|i| link_to("##{i.id}", i) }.join(', ').html_safe %></td>
+        <td align="center"><%= run.versions.collect {|v| link_to(v.name,v) }.join.html_safe %></td>
+        <% if User.current.allowed_to?(:pass_runs, @project) %>
+          <td align="center"><%= User.current == run.assigned_to ? link_to('', project_testkit_pass_run_path(testkit_id: run.id, project_id: @project.identifier), :class => 'icon icon-test') : link_to('', '#', :class => 'icon', :style => 'background-image: url(/images/false.png);')  -%></td>
+        <% end %>
+        <td align="center"><%= link_to '', project_testkit_edit_run_path(testkit_id: run.id, project_id: @project.identifier), :class => 'icon icon-edit' -%></td>
+        <% if User.current.allowed_to?(:delete_runs, @project) %>
+          <td align="center"><%= link_to '', project_testkit_path(id: run.id, project_id: @project.identifier), :method => :delete, :class => 'icon icon-del', data: { confirm: "Вы точно ходите удалить тестирование?" } -%></td>
+        <% end %>
+      </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <td colspan="9" align="center">Нет активного тестирования</td>
+    </tr>
+  <% end %>
+</table>

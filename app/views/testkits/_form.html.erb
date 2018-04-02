@@ -1,0 +1,50 @@
+<div class="box tabular">
+  <p>
+    <%= f.label :name %>
+    <%= f.text_field :name, style: "width: 77%;" %> <br />
+  </p>
+  <p>
+    <%= f.label :description %>
+    <%= f.text_area :description, style: "width: 77%; height: 100px;" %><br />
+  </p>
+  <p>
+    <%= f.label 'Выберите кейсы:' %>
+    <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px;"></div>
+  </p>
+<%= javascript_tag do %>
+$(function() {
+  $('#testcases').fancytree({
+  <% case action_name %>
+    <% when 'new' %>
+    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
+    <% when 'edit' %>
+    source: { url: "<%= project_testkit_tree_path(:testkit_id => @testkit.id) %>", dataType: "json" },
+    <% when 'create', 'update' %>
+    source: <%= "#{@testkit.tree.flatten.to_json}".html_safe %>,
+  <% end %>
+    checkbox: true,
+    selectMode: 3,
+    select: function(event, data) {
+          var s = $.map(data.tree.getSelectedNodes(), function(node) {
+            if (node.data.type == 'Testcase')
+              return '<input type="hidden" name="testkit[testcase_ids][]" value="' + node.key + '">' 
+          });
+
+          if (s.length > 0) {
+            $('#testcases_ids').html(s.join(''))
+          } else {
+            $('#testcases_ids').html('<input type="hidden" name="testkit[testcase_ids][]" value="">')
+          }
+        },
+  })
+})
+<% end %>
+
+<div id="testcases_ids">
+<% @testkit.testcases.each do |testcase| %>
+    <%= f.hidden_field :testcase_ids, :multiple => true, :value => testcase.id %>
+<% end %>
+</div>
+
+</div>
+<%= f.submit %>

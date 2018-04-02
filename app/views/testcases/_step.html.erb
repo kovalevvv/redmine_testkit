@@ -1,0 +1,14 @@
+<fieldset style="width:60%; margin-top: 3px;">
+  <table class="list">
+    <thead>
+      <th>Шаг</th>
+      <th>Ожидаемый результат</th>
+    </thead>
+    <tr>
+      <td><%= f.text_area :if, style: "width: 100%" %></td>
+      <td><%= f.text_area :then, style: "width: 100%" %></td>
+    </tr>
+  </table> 
+  <%= f.hidden_field :_destroy %>
+  <%= link_to "[Удалить]", '#', :class => "remove_steps icon icon-del", style: "color: red; float: right" %>
+</fieldset>

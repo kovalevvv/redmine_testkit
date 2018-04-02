@@ -1,0 +1,60 @@
+<h2>Окружения</h2>
+<%= render 'testkits/tabs' %>
+<div class="wiki" style="width: 50%">
+<h3>Клиент</h3>
+<% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
+<%= link_to 'Добавить', new_project_testkit_env_path(env_type: "client"), :class => 'icon icon-add', :remote => :true %><br/><br/>
+<% end %>
+<table class="list">
+  <thead>
+    <th></th>
+    <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
+      <th style="width: 20px; text-align: center;" ></th>
+      <th style="width: 20px; text-align: center;" ></th>
+    <% end %>
+  </thead>
+  <% if @client.present? %>
+    <% @client.each do |env| %>
+    <tr>
+      <td><%= env.name -%></td>
+      <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
+        <td><%= link_to '', edit_project_testkit_env_path(id: env.id), :remote => :true, :class => 'icon icon-edit' -%></td>
+        <td><%= link_to '', project_testkit_env_path(id: env.id), :method => :delete, :class => 'icon icon-del', data: { confirm: l(:text_are_you_sure) } -%></td>
+      <% end %>
+    </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <td colspan="3">Записи отсутствуют</td>
+    </tr>
+  <% end %>
+</table>
+<h3>Сервер</h3>
+<% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
+  <%= link_to 'Добавить', new_project_testkit_env_path(env_type: "server"), :class => 'icon icon-add', :remote => :true %><br/><br/>
+<% end %>
+<table class="list">
+  <thead>
+    <th></th>
+    <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
+      <th style="width: 20px; text-align: center;"></th>
+      <th style="width: 20px; text-align: center;" ></th>
+    <% end %>
+  </thead>
+  <% if @server.present? %>
+    <% @server.each do |env| %>
+    <tr>
+      <td><%= env.name -%></td>
+      <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
+        <td><%= link_to '', edit_project_testkit_env_path(id: env.id), :remote => :true, :class => 'icon icon-edit' -%></td>
+        <td><%= link_to '', project_testkit_env_path(id: env.id), :method => :delete, :class => 'icon icon-del', data: { confirm: l(:text_are_you_sure) } -%></td>
+      <% end %>
+    </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <td colspan="3">Записи отсутствуют</td>
+    </tr>
+  <% end %>
+</table>
+</div>

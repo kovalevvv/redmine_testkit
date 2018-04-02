@@ -1,0 +1,28 @@
+<h2>Архив</h2>
+<%= render 'tabs' %>
+<div class="content" style="max-width: 1800px;">
+<h3></h3>
+<table class="list">
+  <thead>
+    <th>Название</th>
+    <th>Автор</th>
+    <th>Создано</th>
+    <th>Перемещено в архив</th>
+    <th>Статистика</th>
+  </thead>
+  <% if @archive.present? %>
+    <% @archive.each do |testkit| %>
+      <tr>
+        <td><%= testkit.name -%></td>
+        <td align="center"><%= testkit.author -%></td>
+        <td align="center"><%= format_time(testkit.created_at) -%></td>
+        <td align="center"><%= format_time(testkit.updated_at) -%></td>
+        <td><%= testkit.template_statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %>, количество запусков: <%= testkit.templates_done %></td>
+      </tr>
+    <% end %>
+  <% else %>
+  <tr>
+    <td colspan="5" align="center">Пусто</td>
+  </tr>
+  <% end %>
+</table>

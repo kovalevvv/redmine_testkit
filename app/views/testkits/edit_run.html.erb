@@ -1,0 +1,10 @@
+<h2>Редактируем: <%= @testkit.name %></h2>
+<%= render 'tabs' %>
+<div class="wiki" style="width: 70%">
+<h2>По шаблону: <%= @testkit.parent.present? ? @testkit.parent.name : @testkit.name %></h2>
+<%= error_messages_for @testkit %>
+<%= form_for(@testkit, url: project_testkit_update_run_path) do |f| %>
+  <%= render partial: 'form_run', locals: {f: f} %>
+  <%= f.submit 'Сохранить' %>
+<% end %>
+</div>

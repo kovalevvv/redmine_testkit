@@ -1,0 +1,2 @@
+$('#step_<%= @step.id %>').html('<%= escape_javascript(render :partial => "testcase_steps/step", :locals => { step: @step, attachments: @step.attachments, options: { editable: true, deletable: true, author: true }, thumbnails: Setting.thumbnails_enabled? }) %>');
+hideModal();

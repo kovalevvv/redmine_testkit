@@ -1,0 +1,12 @@
+<h2>Редактируем: <%= @testkit.name %></h2>
+<%= render 'tabs' %>
+<%= error_messages_for @testkit %>
+<%= form_for(@testkit, url: project_testkit_path) do |f| %>
+  <%= render :partial => 'form', locals: { :f => f } %>
+<% end %>
+
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'jquery.fancytree-all.min', :plugin => 'redmine_testkit' %>
+  <%= stylesheet_link_tag 'ui.fancytree.min', :plugin => 'redmine_testkit' %>
+<% end %>
+

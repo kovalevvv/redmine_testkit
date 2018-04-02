@@ -1,0 +1,17 @@
+<% if issue.testkits.present? %>
+  <hr />
+  <p><strong>Тестирование</strong></p>
+  <% if issue.testkits.run.present? %>
+  <div>
+    <%= render :partial => 'testkits/table_runs', locals: { runs: issue.testkits.run } %>
+  </div>
+  <% end %>
+  <% if issue.testkits.report.present? %>
+  <div>
+    <%= render :partial => 'testkits/table_reports', locals: { reports: issue.testkits.report } %>
+  </div>
+  <% end %>
+<% end %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'redmine_testkit', :plugin => 'redmine_testkit' %>
+<% end %>

@@ -1,0 +1,21 @@
+<% if @testcase.folder_id and not action_name == "edit" %>
+  <%= f.hidden_field :folder_id %>
+<% else %>
+  <%= f.label :folder_id, "Каталог" %>
+  <%= f.collection_select :folder_id, TestcaseFolder.where(project: @project), :id, :name, include_blank: @testcase.new_record? ? true : false %><br />
+<% end %>
+
+<%= f.label :name %> <br />
+<%= f.text_field :name, style: "width: 400px" %> <br />
+<%= f.label :description %> <br />
+<%= f.text_area :description, :rows => "3", style: "width: 400px;" %>
+<p id="attachments_form"><label><%= l(:label_attachment_plural) %></label><%= render :partial => 'attachments/form', :locals => {:container => @testcase} %></p>
+<%= link_to_attachments @testcase, :thumbnails => true %>
+
+<%= f.fields_for :steps do |builder| %>
+  <%= render 'step', f: builder %>
+<% end %>
+<br />
+<%= link_to_add_step "Добавить шаг", f, :steps %>
+<br /><br />
+<%= f.submit %>

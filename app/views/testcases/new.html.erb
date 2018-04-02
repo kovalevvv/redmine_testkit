@@ -1,0 +1,10 @@
+<h2 class="title">Новый тест-кейс</h2>
+<%= render 'testkits/tabs' %>
+<% if @testcase.folder %>
+<h3 class="title icon icon-folder"><%= make_folders_legend(@testcase.folder) %></h3>
+<% end %>
+<%= error_messages_for @testcase %>
+<%= javascript_tag render 'script' %>
+<%= form_for @testcase, url: project_testcases_path do |f| %>
+  <%= render :partial => 'form', locals: { f: f} %>
+<% end %>

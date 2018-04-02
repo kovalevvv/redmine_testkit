@@ -1,0 +1,8 @@
+<% if @folder.parent_id and not action_name == "edit" %>
+  <%= f.hidden_field :parent_id, :value => @folder.parent_id %>
+<% else %>
+  <%= f.select :parent_id, TestcaseFolder.where(project: @project).where.not(id: [@folder.id] + @folder.children.pluck(:id)).collect { |p| [ p.name, p.id ] }, include_blank: true %>
+<% end %>
+<%= f.text_field :name %>
+<%= f.hidden_field :project_id, :value => @project.id %>
+<%= f.submit %>

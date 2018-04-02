@@ -1,0 +1,6 @@
+<h3 class="title">Редактируем: <%= @env.name %></h3>
+<%= error_messages_for @env %>
+<%= form_for @env, url: project_testkit_env_path do |f| %>
+  <%= render :partial => 'form', locals: { f: f} %>
+<% end %>
+

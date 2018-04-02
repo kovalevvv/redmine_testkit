@@ -1,0 +1,5 @@
+<h3 class="title">Новай каталог</h3>
+<%= error_messages_for @folder %>
+<%= form_for @folder, url: project_testcase_folders_path do |f| %>
+  <%= render :partial => 'form', locals: { f: f } %>
+<% end %>

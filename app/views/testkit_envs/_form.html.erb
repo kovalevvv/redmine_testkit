@@ -1,0 +1,4 @@
+<%= f.text_field :name, :style => "width: 400px;" %>
+<%= f.hidden_field :project_id %>
+<%= f.hidden_field :env_type %>
+<%= f.submit controller.action_name == 'edit' ? 'обновить' : 'добавить окружение' %>
