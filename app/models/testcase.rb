@@ -56,6 +56,8 @@ class Testcase < ActiveRecord::Base
     if testkit and testkit.testcases.include?(self)
       r.merge!(:selected => true)
     end
+    icon = run_in_production ? "normal-icon-class" : "warning-icon-class"
+    r.merge!(:icon => icon)
     r
   end
 end

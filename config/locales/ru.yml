@@ -5,6 +5,9 @@ ru:
   label_testkit_envs: Окружения
   label_reports: Отчеты
   label_archive: Архив
+  select_yes: Да
+  select_no: Нет
+  field_run_in_production: Возможность выполнения на продуктиве
   field_testkit_client_env: Окружение клиента
   field_testkit_env: Площадка тестирования
   field_issue_ids: 'Задачи #'
