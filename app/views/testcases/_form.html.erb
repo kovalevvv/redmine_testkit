@@ -9,7 +9,8 @@
 <%= f.text_field :name, style: "width: 400px" %> <br />
 <%= f.label :description %> <br />
 <%= f.text_area :description, :rows => "3", style: "width: 400px;" %> <br/>
-<%= f.label :run_in_production %> <%= f.select :run_in_production, options_for_select([[t(:select_yes), true], [t(:select_no), false]], {:selected => @testcase.run_in_production}) %>
+<%= f.label :run_in_production %> <%= f.select :run_in_production, options_for_select([[t(:select_yes), true], [t(:select_no), false]], {:selected => @testcase.run_in_production}) %> <br />
+<%= f.label :priority %> <%= f.select :priority, options_for_select(Testcase.priorities_list.collect {|p| [t('select_priority_'+p), p] }, {:selected => @testcase.priority}) %>
 <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label><%= render :partial => 'attachments/form', :locals => {:container => @testcase} %></p>
 <%= link_to_attachments @testcase, :thumbnails => true %>
 

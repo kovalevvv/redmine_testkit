@@ -7,6 +7,9 @@ ru:
   label_archive: Архив
   select_yes: Да
   select_no: Нет
+  select_priority_low: Низкий
+  select_priority_normal: Средний
+  select_priority_critical: Высокий
   field_run_in_production: Возможность выполнения на продуктиве
   field_testkit_client_env: Окружение клиента
   field_testkit_env: Площадка тестирования

@@ -19,6 +19,7 @@ class Testcase < ActiveRecord::Base
   validates :name, :folder_id, presence: true
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
+  TESTCASE_PRIORITIES = %w(low normal critical)
 
   def chart_values
     values = steps.order_as_specified(status: Testcase.status_list).pluck(:status)
@@ -51,13 +52,18 @@ class Testcase < ActiveRecord::Base
     TESTCASE_STATUSES
   end
 
+  def self.priorities_list
+    TESTCASE_PRIORITIES
+  end
+
   def to_tree(testkit: nil)
-    r = {title: name, key: id, type: "Testcase"}
+    r = {title: name, key: id, type: "Testcase", icon: priority}
     if testkit and testkit.testcases.include?(self)
       r.merge!(:selected => true)
     end
-    icon = run_in_production ? "normal-icon-class" : "warning-icon-class"
-    r.merge!(:icon => icon)
+    unless run_in_production
+      r.merge!(:extraClasses => 'critical')
+    end
     r
   end
 end
