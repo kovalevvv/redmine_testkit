@@ -57,7 +57,7 @@ class Testcase < ActiveRecord::Base
   end
 
   def to_tree(testkit: nil)
-    r = {title: name, key: id, type: "Testcase", icon: priority}
+    r = {title: "#{name} ##{id}", key: id, type: "Testcase", icon: priority}
     if testkit and testkit.testcases.include?(self)
       r.merge!(:selected => true)
     end

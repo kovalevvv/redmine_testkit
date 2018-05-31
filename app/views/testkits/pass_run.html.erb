@@ -25,7 +25,7 @@
   <% @run.testcases.each_with_index do |testcase,i| %>
     <%= f.fields_for :testcases, testcase do |tf| %>
     <fieldset style="margin-bottom: 10px; background: white;">
-    <h2><%= "#{i+1}. #{testcase.name.mb_chars.capitalize}" %></h2>
+    <h2><%= "#{i+1}. #{testcase.name.mb_chars.capitalize} ##{testcase.parent.id}" %></h2>
       <% if testcase.description.present? %>
         <p><%= testcase.description %></p>
       <% end %>

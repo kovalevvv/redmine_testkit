@@ -35,7 +35,7 @@
     </p>
   </div>
   <% @report.testcases.each_with_index do |testcase,i| %>
-    <h1><%= "#{i+1}. #{testcase.name.mb_chars.capitalize}" %></h1>
+    <h1><%= "#{i+1}. #{testcase.name.mb_chars.capitalize} ##{testcase.parent.id}" %></h1>
       <% if testcase.description.present? %>
         <p><%= testcase.description %></p>
       <% end %>

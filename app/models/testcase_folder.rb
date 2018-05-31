@@ -10,9 +10,9 @@ class TestcaseFolder < ActiveRecord::Base
     children << folder.children.collect { |folder| make_tree(folder, testkit: testkit) } if folder.children.present?
     children << folder.testcases.not_run.order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     if children
-      [{title: folder.name, key: folder.id, type: "TestcaseFolder", folder: true, expanded: true, children: children.flatten}]
+      [{title: "#{folder.name} ##{folder.id}", key: folder.id, type: "TestcaseFolder", folder: true, expanded: true, children: children.flatten}]
     else
-      [{title: folder.name, key: folder.id, type: "TestcaseFolder", folder: true}]
+      [{title: "#{folder.name} ##{folder.id}", key: folder.id, type: "TestcaseFolder", folder: true}]
     end
   end
 end
