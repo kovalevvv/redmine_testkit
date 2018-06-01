@@ -1,12 +1,15 @@
-<h3 class="title"><%= make_folders_legend(@testcase.folder, first: false) + @testcase.name %></h3>
+<h3 class="title"><%= make_folders_legend(@testcase.folder, first: false) + @testcase.name + ' #' + @testcase.id.to_s %></h3>
 <div class="wiki">
   <ul>
     <li><b>Автор:</b> <%= @testcase.author %></li>
     <li><b>Создано:</b> <%= format_time(@testcase.created_at) %></li>
     <li><b>Обновлено:</b> <%= format_time(@testcase.updated_at) %></li>
-    <li><b>Описание:</b> <%= @testcase.description %></li>
+    <li><b><%= t(:field_run_in_production) %>:</b> <%= @testcase.run_in_production ? t(:select_yes) : t(:select_no) %></li>
+    <li><b><%= t(:field_priority) %>:</b> <%= t('select_priority_'+@testcase.priority) %></li>
+    <li><b><%= t(:field_duration) %>:</b> <%= distance_of_time_in_words(0, @testcase.duration.minutes) %></li>
     <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
     <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
+    <li><b>Описание:</b> <%= @testcase.description %></li>
     <% if @testcase.attachments.present? %>
       <li><b>Файлы:</b></li>
       <%= link_to_attachments @testcase, :thumbnails => false %>
@@ -14,11 +17,13 @@
   </ul>
 <table class="list">
  <thead>
+   <th>#</th>
    <th>Шаг</th>
    <th>Ожидаемый результат</th>
  </thead>
-<% @testcase.steps.each do |step| %>
+<% @testcase.steps.each_with_index do |step,i| %>
   <tr>
+    <td align="center"><%= i+1 %></td>
     <td><%= step.if %></td>
     <td><%= step.then %></td>
   </tr>

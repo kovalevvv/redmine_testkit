@@ -1,4 +1,4 @@
-<h2 class="title">Редактируем тест-кейс: <%= @testcase.name %></h3>
+<h2 class="title">Редактируем тест-кейс: <%= @testcase.name %> #<%= @testcase.id %></h3>
 <%= render 'testkits/tabs' %>
 <% if @testcase.folder %>
 <h3 class="title icon icon-folder"><%= make_folders_legend(@testcase.folder) %></h3>
