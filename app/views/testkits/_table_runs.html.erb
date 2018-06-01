@@ -2,6 +2,7 @@
   <thead>
     <th>Название</th>
     <th>Создано</th>
+    <th>Оценка времени</th>
     <th>В тестировании</th>
     <th>Назначена</th>
     <th>Окружения</th>
@@ -20,6 +21,7 @@
       <tr>
         <td><%= run.name %></td>
         <td align="center"><%= format_time(run.created_at) %></td>
+        <td align="center"><%= distance_of_time_in_words(0, run.testcases.sum(:duration).minutes) %></td>
         <td align="center"><%= run.start_date ? distance_of_time_in_words(run.start_date, DateTime.now) + ' c ' + format_time(run.start_date) : 'Не начиналось' %></td>
         <td align="center"><%= link_to(run.assigned_to, run.assigned_to) %></td>
         <td>Клиент: <%= run.client_env %><br />Сервер: <%= run.env %></td>
@@ -36,7 +38,7 @@
     <% end %>
   <% else %>
     <tr>
-      <td colspan="10" align="center">Нет активного тестирования</td>
+      <td colspan="11" align="center">Нет активного тестирования</td>
     </tr>
   <% end %>
 </table>

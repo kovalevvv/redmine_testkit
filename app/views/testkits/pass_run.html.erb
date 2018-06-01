@@ -7,6 +7,9 @@
     <strong>Создал тестирование:</strong> <%= @run.author %> <strong>в</strong> <%= format_time(@run.created_at) %>
   </p>
   <p>
+    <strong>Оценка времени:</strong> <%= distance_of_time_in_words(0, @run.testcases.sum(:duration).minutes) %>
+  </p>
+  <p>
     <strong>Клиент:</strong> <%= @run.client_env %>
   </p>
   <p>

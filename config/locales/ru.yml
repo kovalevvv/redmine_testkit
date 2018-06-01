@@ -15,5 +15,6 @@ ru:
   field_testkit_env: Площадка тестирования
   field_issue_ids: 'Задачи #'
   field_version_ids: Сборка
+  field_duration: Оценка времени
   project_module_testkit: Тестирование (Бета)
   
