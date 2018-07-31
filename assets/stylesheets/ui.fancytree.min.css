@@ -29,7 +29,7 @@ span.fancytree-custom-icon.critical {
   background-image: url(critical.png);
 }
 span.fancytree-node.critical > span.fancytree-title {
-  background: #ffc4c4;
+  background: #fee3e3;
   color: maroon;
 }
 

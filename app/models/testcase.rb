@@ -10,6 +10,7 @@ class Testcase < ActiveRecord::Base
   belongs_to :parent, :class_name => 'Testcase'
 
   acts_as_attachable
+  acts_as_taggable
   
   extend OrderAsSpecified
   
@@ -57,7 +58,8 @@ class Testcase < ActiveRecord::Base
   end
 
   def to_tree(testkit: nil)
-    r = {title: "#{name} ##{id}", key: id, type: "Testcase", icon: priority}
+    title = tag_list.present? ? "[##{id}] #{name} (#{tag_list.join(", ")})" : "[##{id}] #{name}"
+    r = {title: title, key: id, type: "Testcase", icon: priority}
     if testkit and testkit.testcases.include?(self)
       r.merge!(:selected => true)
     end
@@ -66,4 +68,27 @@ class Testcase < ActiveRecord::Base
     end
     r
   end
+
+  def self.available_tags(options = {})
+    scope_testcases = Testcase.select('testcases.id')
+    scope_testcases = scope_testcases.where(:project => options[:project]) if options[:project]
+    result_scope = ActsAsTaggableOn::Tag
+      .joins(:taggings)
+      .select('tags.id, tags.name, tags.taggings_count, COUNT(taggings.id) as count')
+      .group('tags.id, tags.name, tags.taggings_count')
+      .where(taggings: { taggable_type: 'Testcase', taggable_id: scope_testcases})
+
+      if options[:name_like]
+        matcher = "%#{options[:name_like].downcase}%"
+
+        case connection.adapter_name
+        when 'PostgreSQL'
+          result_scope = result_scope.where('tags.name ILIKE ?', matcher)
+        else
+          result_scope = result_scope.where('tags.name LIKE ?', matcher)
+        end
+      end
+    result_scope
+  end
+
 end

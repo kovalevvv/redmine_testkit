@@ -5,14 +5,22 @@ class TestcaseFolder < ActiveRecord::Base
   belongs_to :project
   validates :name, :presence => true
 
-  def make_tree(folder=self, testkit: nil)
+  def make_tree(folder=self, testkit: nil, tags: nil)
     children = []
-    children << folder.children.collect { |folder| make_tree(folder, testkit: testkit) } if folder.children.present?
-    children << folder.testcases.not_run.order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
-    if children
-      [{title: "#{folder.name} ##{folder.id}", key: folder.id, type: "TestcaseFolder", folder: true, expanded: true, children: children.flatten}]
+    children << folder.children.collect { |folder| make_tree(folder, testkit: testkit, tags: tags) } if folder.children.present?
+    if tags
+      children << folder.testcases.not_run.tagged_with(tags).order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     else
-      [{title: "#{folder.name} ##{folder.id}", key: folder.id, type: "TestcaseFolder", folder: true}]
+      children << folder.testcases.not_run.order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     end
+    if children
+      [{title: "[##{folder.id}] #{folder.name}", key: folder.id, type: "TestcaseFolder", folder: true, expanded: true, children: children.flatten}]
+    else
+      [{title: "[##{folder.id}] #{folder.name}", key: folder.id, type: "TestcaseFolder", folder: true}]
+    end
+  end
+
+  def text_method
+    "[##{id}] #{name}"
   end
 end

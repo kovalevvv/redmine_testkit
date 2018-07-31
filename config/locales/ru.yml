@@ -16,5 +16,8 @@ ru:
   field_issue_ids: 'Задачи #'
   field_version_ids: Сборка
   field_duration: Оценка времени
+  field_tag_list: Метки
+  testcase_add_tag_placeholder: + Добавить метку
+  testcase_search_tag_placeholder: Поиск по метке
   project_module_testkit: Тестирование (Бета)
   

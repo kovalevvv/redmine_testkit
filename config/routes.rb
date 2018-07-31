@@ -28,3 +28,5 @@ resources :projects do
     end
   end
 end
+
+get '/testcase_tags/auto_complete/:project_id', to: 'auto_completes#testcase_tags', as: 'auto_complete_testcase_tags'

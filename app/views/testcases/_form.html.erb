@@ -1,24 +1,61 @@
+<div class="box tabular">
 <% if @testcase.folder_id and not action_name == "edit" %>
-  <%= f.hidden_field :folder_id %>
+  <p><%= f.hidden_field :folder_id %></p>
 <% else %>
+<p>
   <%= f.label :folder_id, "Каталог" %>
-  <%= f.collection_select :folder_id, TestcaseFolder.where(project: @project), :id, :name, include_blank: @testcase.new_record? ? true : false %><br />
+  <%= f.collection_select :folder_id, TestcaseFolder.where(project: @project), :id, :text_method, include_blank: @testcase.new_record? ? true : false %>
+</p>
 <% end %>
-
-<%= f.label :name %> <br />
-<%= f.text_field :name, style: "width: 400px" %> <br />
-<%= f.label :description %> <br />
-<%= f.text_area :description, :rows => "3", style: "width: 400px;" %> <br/>
-<%= f.label :run_in_production %> <%= f.select :run_in_production, options_for_select([[t(:select_yes), true], [t(:select_no), false]], {:selected => @testcase.run_in_production}) %> <br />
-<%= f.label :priority %> <%= f.select :priority, options_for_select(Testcase.priorities_list.collect {|p| [t('select_priority_'+p), p] }, {:selected => @testcase.priority}) %> <br />
+<p>
+<%= f.label :name %> 
+<%= f.text_field :name, style: "width: 400px" %>
+</p>
+<p>
+<%= f.label :description %>
+<%= f.text_area :description, :rows => "3", style: "width: 400px;" %>
+</p>
+<p>
+<%= f.label :run_in_production %> <%= f.select :run_in_production, options_for_select([[t(:select_yes), true], [t(:select_no), false]], {:selected => @testcase.run_in_production}) %>
+</p>
+<p>
+<%= f.label :priority %> <%= f.select :priority, options_for_select(Testcase.priorities_list.collect {|p| [t('select_priority_'+p), p] }, {:selected => @testcase.priority}) %>
+</p>
+<p>
 <%= f.label :duration %> <%= f.text_field :duration, style: "width: 50px" %> минут
+</p>
+<p style="width: 800px;">
+<%= f.label :tag_list %> <%= f.text_field :tag_list, value: f.object.tag_list.to_s %> <br />
+<%= stylesheet_link_tag 'jquery.tagit.css', plugin: 'redmine_testkit' %>
+<%= stylesheet_link_tag 'redmine_tags', plugin: 'redmine_testkit' %>
+<%= javascript_include_tag 'tag-it.min', plugin: 'redmine_testkit' %>
+<%= javascript_tag "$('#testcase_tag_list').tagit({
+  tagSource: function(search, showChoices) {
+    var that = this;
+    $.ajax({
+      url: '#{url_for(:controller => 'auto_completes', :action => 'testcase_tags', :project => @project)}',
+      data: {q: search.term},
+      success: function(choices) {
+        showChoices(that._subtractArray(jQuery.parseJSON(choices), that.assignedTags()));
+      }
+    });
+  },
+  allowSpaces: true,
+  placeholderText: '#{l :testcase_add_tag_placeholder}',
+  caseSensitive: false,
+  removeConfirmation: true,
+  showAutocompleteOnFocus: true,
+});" %>
+</p>
 <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label><%= render :partial => 'attachments/form', :locals => {:container => @testcase} %></p>
+
 <%= link_to_attachments @testcase, :thumbnails => true %>
 
 <%= f.fields_for :steps do |builder| %>
   <%= render 'step', f: builder %>
 <% end %>
-<br />
+
 <%= link_to_add_step "Добавить шаг", f, :steps %>
-<br /><br />
+<p></p>
 <%= f.submit %>
+</div>

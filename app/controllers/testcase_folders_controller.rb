@@ -6,7 +6,11 @@ class TestcaseFoldersController < ApplicationController
   def tree
     json = []
     TestcaseFolder.where(parent_id: nil, project: @project).each do |folder|
-      json << folder.make_tree
+      if params[:q].present? and params[:q].is_a? Array
+        json << folder.make_tree(tags: params[:q])
+      else
+        json << folder.make_tree
+      end
     end
     render json: json.flatten
   end

@@ -1,9 +1,58 @@
-<h2>Тест-кейсы</h2>
 <%= render 'testkits/tabs' %>
+
 <% if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
+
+<div class="buttons">
   <%= link_to 'Добавить папку', new_project_testcase_folder_path, :class => 'icon icon-folder', :remote => :true %>
   <%= link_to 'Добавить тест-кейс', new_project_testcase_path(testcase: { folder_id: nil }), :class => 'icon icon-add' %>
-<br /><br />
+</div>
+
+
+<div class="box">
+<p style="width: 800px">
+<%= text_field_tag :tag_list %>
+<%= stylesheet_link_tag 'jquery.tagit.css', plugin: 'redmine_testkit' %>
+  <%= stylesheet_link_tag 'redmine_tags', plugin: 'redmine_testkit' %>
+  <%= javascript_include_tag 'tag-it.min', plugin: 'redmine_testkit' %>
+  <%= javascript_tag "$('#tag_list').tagit({
+    tagSource: function(search, showChoices) {
+      var that = this;
+      $.ajax({
+        url: '#{url_for(:controller => 'auto_completes', :action => 'testcase_tags', :project => @project)}',
+        data: {q: search.term},
+        success: function(choices) {
+          showChoices(that._subtractArray(jQuery.parseJSON(choices), that.assignedTags()));
+        }
+      });
+    },
+    afterTagAdded: function(event, ui) {
+      var x = event
+      var y = ui
+      console.log(event)
+    },
+    allowSpaces: true,
+    placeholderText: '#{l :testcase_search_tag_placeholder}',
+    caseSensitive: false,
+    removeConfirmation: true,
+    showAutocompleteOnFocus: true,
+  });" %>
+<%= javascript_tag do -%>
+function updateTree() {
+  tree = $("#testcases").fancytree('getTree');
+  params = $("#tag_list").tagit("assignedTags");
+  tree.reload({
+    url: "<%= tree_project_testcase_folders_path %>",
+    type: 'GET',
+    data: { q: params},
+    dataType: 'json'
+  })  
+}
+<% end %>
+  <span class="buttons">
+    <%= link_to_function l(:button_apply), 'updateTree()', :class => 'icon icon-checked' %>
+    <%= link_to_function l(:button_clear), '$("#tag_list").tagit("removeAll"); updateTree();', :class => 'icon icon-reload'  %>
+  </span>
+</p>
 <% end %>
 <%= form_tag({}) do -%>
 <div id="testcases" style="max-width: 1800px;" class="content">
@@ -26,3 +75,4 @@ $(function() {
   <%= stylesheet_link_tag 'ui.fancytree.min', :plugin => 'redmine_testkit' %>
   <%= stylesheet_link_tag 'context_menu' %>
 <% end %>
+</div>

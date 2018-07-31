@@ -4,6 +4,7 @@ Rails.application.config.to_prepare do
   unless Issue.include?(RedmineTestkit::IssuePatch)
     Issue.send(:include, RedmineTestkit::IssuePatch)
     Version.send(:include, RedmineTestkit::VersionPatch)
+    AutoCompletesController.send(:include, RedmineTestkit::AutoCompletesControllerPatch)
   end
 end
 
