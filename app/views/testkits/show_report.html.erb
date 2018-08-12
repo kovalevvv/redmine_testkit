@@ -1,10 +1,17 @@
-<h2>Отчет по тестированию: <%= @report.name %></h2>
 <%= render 'tabs' %>
+<h2>Отчет по тестированию: <%= @report.name %></h2>
+<div class="buttons">
+  <%= link_to 'Протокол тестирования', project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: 'ps'), :class => 'icon icon-report' %>
+  <%= link_to 'ПМИ', project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: 'pmi'), :class => 'icon icon-report' %>
+</div>
 <div class="content">
   <div class="box" style="background: #FFD;">
   <div style="float: right; width: 500px;"><canvas id="chart-area"></canvas></div>
     <p>
-      <strong>Создал тестирование:</strong> <%= @report.author %> <strong>в</strong> <%= format_time(@report.created_at) %>
+      <strong>Создал тестирование:</strong> <%= @report.author %> <strong>в</strong> <%= format_time(@report.created_at) %> <strong>по шаблону: </strong> <%= @report.parent.name -%>
+      <% if @report.last_user_update.present? %>
+<strong>, последняя редакция:</strong> <%= @report.last_user_update %> <strong>в</strong> <%= format_time(@report.last_user_update_date) %>
+      <% end %>
     </p>
     <p>
       <strong>Оценка времени:</strong> <%= distance_of_time_in_words(0, @report.testcases.sum(:duration).minutes) %>

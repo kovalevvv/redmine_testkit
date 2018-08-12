@@ -7,6 +7,7 @@ resources :projects do
     get 'new_run', to: 'testkits#new_run'
     get 'edit_run', to: 'testkits#edit_run'
     get 'report', to: 'testkits#show_report'
+    get ':type/export', to: 'testkit_export#make', as: 'export'
     match 'create_run', to: 'testkits#create_run', via: [:patch, :post]
     match 'update_run', to: 'testkits#update_run', via: [:patch, :post]
     match 'pass_run', to: 'testkits#pass_run', via: [:get, :patch]

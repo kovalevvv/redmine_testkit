@@ -1,5 +1,6 @@
 gem 'order_as_specified'
 gem 'acts-as-taggable-on', '3.5'
+gem 'sablon'
 
 group :development do
   gem 'sextant'

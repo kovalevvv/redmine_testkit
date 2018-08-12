@@ -1,9 +1,9 @@
-<h2>Окружения</h2>
 <%= render 'testkits/tabs' %>
-<div class="wiki" style="width: 50%">
-<h3>Клиент</h3>
+<h2 class="title">Клиент</h2>
 <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
-<%= link_to 'Добавить', new_project_testkit_env_path(env_type: "client"), :class => 'icon icon-add', :remote => :true %><br/><br/>
+  <div class="buttons">
+    <%= link_to 'Добавить', new_project_testkit_env_path(env_type: "client"), :class => 'icon icon-add', :remote => :true %>
+  </div>
 <% end %>
 <table class="list">
   <thead>
@@ -29,9 +29,11 @@
     </tr>
   <% end %>
 </table>
-<h3>Сервер</h3>
+<br/><h2 class="title">Сервер</h2>
 <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
-  <%= link_to 'Добавить', new_project_testkit_env_path(env_type: "server"), :class => 'icon icon-add', :remote => :true %><br/><br/>
+  <div class="buttons">
+    <%= link_to 'Добавить', new_project_testkit_env_path(env_type: "server"), :class => 'icon icon-add', :remote => :true %>
+  </div>
 <% end %>
 <table class="list">
   <thead>
@@ -57,4 +59,3 @@
     </tr>
   <% end %>
 </table>
-</div>

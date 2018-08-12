@@ -1,5 +1,5 @@
-<h2>Новый набор тестирования</h2>
 <%= render 'tabs' %>
+<h2>Новый набор тестирования</h2>
 <%= error_messages_for @testkit %>
 <%= form_for(@testkit, url: project_testkits_path) do |f| %>
   <%= render :partial => 'form', locals: { :f => f } %>

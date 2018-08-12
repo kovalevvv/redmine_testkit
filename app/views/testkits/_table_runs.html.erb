@@ -15,6 +15,7 @@
     <% if User.current.allowed_to?(:delete_runs, @project) %>
       <th width="10px"></th>
     <% end %>
+      <th width="10px"></th>
   </thead>
   <% if runs.present? %>
     <% runs.each do |run| %>
@@ -34,6 +35,7 @@
         <% if User.current.allowed_to?(:delete_runs, @project) %>
           <td align="center"><%= link_to '', project_testkit_path(id: run.id, project_id: @project.identifier), :method => :delete, :class => 'icon icon-del', data: { confirm: "Вы точно ходите удалить тестирование?" } -%></td>
         <% end %>
+        <td align="center"><%= link_to 'ПМИ', project_testkit_export_path(project_id: @project.identifier, testkit_id: run.id, type: 'pmi'), :class => 'icon icon-report' -%></td>
       </tr>
     <% end %>
   <% else %>

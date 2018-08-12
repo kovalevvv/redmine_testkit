@@ -4,6 +4,7 @@ class Testkit < ActiveRecord::Base
   belongs_to :project
   belongs_to :user_start, :class_name => 'Principal'
   belongs_to :user_end, :class_name => 'Principal'
+  belongs_to :last_user_update, :class_name => 'Principal'
   belongs_to :parent, :class_name => 'Testkit'
   has_and_belongs_to_many :testcases, -> { order(:id) }, :autosave => true
   has_and_belongs_to_many :issues
@@ -16,6 +17,37 @@ class Testkit < ActiveRecord::Base
 
   scope :run, -> { where(run: true, done: false) }
   scope :report, -> { where(run: true, done: true) }
+
+  def update_with_last_user_update(attributes)
+    if template?
+      attributes.merge!({:last_user_update_id => User.current.id, :last_user_update_date => Time.now})
+    end
+    update_without_last_user_update(attributes)
+  end
+
+  alias_method_chain :update, :last_user_update
+
+  include ActionView::Helpers::DateHelper
+  include Rails.application.routes.url_helpers
+  
+  def as_json(*)
+    super.tap do |h|
+      h["author"] = author.name
+      h["created_at"] = format_time(created_at)
+      h["report_template"] = parent.name
+      h["last_user_update"] = last_user_update.name if last_user_update.present?
+      h["last_user_update_date"] = format_time(last_user_update_date) if last_user_update_date
+      h["assigned_to"] = assigned_to.name
+      h["issues"] = issues.map(&:to_s).join(", ") if issues.present?
+      h["version"] = '%s (%s)' % [versions.take.name, version_url(versions.take, host: 'https://repo.mos.ru')]  if versions.present?
+      h["time_evaluation"] = distance_of_time_in_words(0, testcases.sum(:duration).minutes)
+      h["work_time"] = distance_of_time_in_words(start_date, done_date) if done
+      h["start"] = '%s, %s' % [user_start.name, format_time(start_date)] if user_start.present?
+      h["end"] = '%s, %s' % [user_end.name, format_time(done_date)] if user_end.present?
+      h["comment"] = comment.present? ? comment : nil
+      h["description"] = description.present? ? description : nil
+    end
+  end
 
   def report_result
     Testkit.where(id: self.id).joins(:testcases).group(:status).count

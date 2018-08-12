@@ -1,6 +1,12 @@
 class TestcaseStep < ActiveRecord::Base
+  belongs_to :testcase
+
   acts_as_attachable
   extend OrderAsSpecified
+
+  def index
+    testcase.steps.index(self)+1
+  end
   
   def attachments_editable?(user=User.current)
     true

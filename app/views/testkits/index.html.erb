@@ -1,16 +1,8 @@
-<h2>Тестирование</h2>
 <%= render 'tabs' %>
-<div class="content">
-<h3>Запуски</h3>
-<%= render :partial => 'table_runs', locals: {runs: @runs} %>
-<% if User.current.allowed_to?(:view_reports, @project) %>
-  <% if @last_reports.present? %>
-  <h3>Последние отчеты</h3>
-  <%= render :partial => 'table_reports', locals: {reports: @last_reports} %>
-  <% end %>
-<% end %>
-<h3>Шаблоны</h3>
-<%= link_to 'Создать', new_project_testkit_path, :class => 'icon icon-add' if User.current.allowed_to?(:create_and_edit_testkits, @project) %><br/><br/>
+<h2 class="title">Шаблоны</h2>
+<div class="buttons">
+  <%= link_to 'Создать', new_project_testkit_path, :class => 'icon icon-add' if User.current.allowed_to?(:create_and_edit_testkits, @project) %>
+</div>
 <table class="list">
   <thead>
     <th>Название</th>
@@ -53,4 +45,12 @@
   </tr>
   <% end %>
 </table>
-</div>
+<br/><h2 class="title">Запуски</h2>
+<%= render :partial => 'table_runs', locals: {runs: @runs} %>
+<% if User.current.allowed_to?(:view_reports, @project) %>
+  <% if @last_reports.present? %>
+  <br/><h2 class="title">Последние отчеты</h2>
+  <%= render :partial => 'table_reports', locals: {reports: @last_reports} %>
+  <% end %>
+<% end %>
+<br/>
