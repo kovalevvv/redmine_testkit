@@ -3,23 +3,23 @@
   <p><%= f.hidden_field :folder_id %></p>
 <% else %>
 <p>
-  <%= f.label :folder_id, "Каталог" %>
+  <%= f.label :folder_id, 'Каталог <span class="required"> *</span>'.html_safe %> 
   <%= f.collection_select :folder_id, TestcaseFolder.where(project: @project), :id, :text_method, include_blank: @testcase.new_record? ? true : false %>
 </p>
 <% end %>
 <p>
-<%= f.label :name %> 
+<%= f.label :name, 'Название тест-кейса <span class="required"> *</span>'.html_safe %>
 <%= f.text_field :name, style: "width: 400px" %>
 </p>
 <p>
-<%= f.label :description %>
+<%= f.label :description, 'Описание <span class="required"> *</span>'.html_safe %>
 <%= f.text_area :description, :rows => "3", style: "width: 400px;" %>
 </p>
 <p>
-<%= f.label :run_in_production %> <%= f.select :run_in_production, options_for_select([[t(:select_yes), true], [t(:select_no), false]], {:selected => @testcase.run_in_production}) %>
+<%= f.label :run_in_production, 'Возможность выполнения на продуктиве <span class="required"> *</span>'.html_safe %> <%= f.select :run_in_production, options_for_select([[t(:select_yes), true], [t(:select_no), false]], {:selected => @testcase.run_in_production}) %>
 </p>
 <p>
-<%= f.label :priority %> <%= f.select :priority, options_for_select(Testcase.priorities_list.collect {|p| [t('select_priority_'+p), p] }, {:selected => @testcase.priority}) %>
+<%= f.label :priority, 'Приоритет <span class="required"> *</span>'.html_safe %> <%= f.select :priority, options_for_select(Testcase.priorities_list.collect {|p| [t('select_priority_'+p), p] }, {:selected => @testcase.priority}) %>
 </p>
 <p>
 <%= f.label :duration %> <%= f.text_field :duration, style: "width: 50px" %> минут
