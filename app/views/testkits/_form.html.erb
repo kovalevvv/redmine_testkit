@@ -1,6 +1,6 @@
 <div class="box tabular">
   <p>
-    <%= f.label :name %>
+    <%= f.label :name, 'Название <span class="required"> *</span>'.html_safe %>
     <%= f.text_field :name, style: "width: 77%;" %> <br />
   </p>
   <p>
@@ -8,7 +8,7 @@
     <%= f.text_area :description, style: "width: 77%; height: 100px;" %><br />
   </p>
   <p>
-    <%= f.label 'Выберите кейсы:' %>
+    <%= f.label 'Тест-кейсы' %>
     <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px;"></div>
   </p>
 <%= javascript_tag do %>
@@ -47,4 +47,5 @@ $(function() {
 </div>
 
 </div>
-<%= f.submit %>
+<%= f.submit 'Сохранить изменения' %>
+<%= button_tag 'Отменить', :type => :button, :onclick => "location.href = '#{project_testkits_path()}';", :style => 'vertical-align: middle; margin-top: 2px;' %>
