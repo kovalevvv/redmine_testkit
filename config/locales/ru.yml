@@ -20,4 +20,6 @@ ru:
   testcase_add_tag_placeholder: + Добавить метку
   testcase_search_tag_placeholder: Поиск по метке
   project_module_testkit: Тестирование (Бета)
-  
+  field_testcase_folder: Каталог
+  field_testcase_name: Название тест-кейса
+  field_testcase_run_in_production: Возможность выполнения на продуктиве
