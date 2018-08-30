@@ -13,11 +13,11 @@ class TestcaseFolder < ActiveRecord::Base
     else
       children << folder.testcases.not_run.order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     end
+    out = {title: "[##{folder.id}] #{folder.name} (#{I18n.t :testcase, count: folder.testcases.not_run.count})", key: folder.id, type: "TestcaseFolder", folder: true}
     if children
-      [{title: "[##{folder.id}] #{folder.name}", key: folder.id, type: "TestcaseFolder", folder: true, expanded: true, children: children.flatten}]
-    else
-      [{title: "[##{folder.id}] #{folder.name}", key: folder.id, type: "TestcaseFolder", folder: true}]
+      out.merge!({expanded: true, children: children.flatten})
     end
+    [out]
   end
 
   def text_method

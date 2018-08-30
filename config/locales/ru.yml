@@ -23,3 +23,9 @@ ru:
   field_testcase_folder: Каталог
   field_testcase_name: Название тест-кейса
   field_testcase_run_in_production: Возможность выполнения на продуктиве
+  testcase:
+    zero:  "%{count} тест-кейсов"
+    one:   "%{count} тест-кейс"
+    few:   "%{count} тест-кейса"
+    many:  "%{count} тест-кейсов"
+    other: "%{count} тест-кейсов"

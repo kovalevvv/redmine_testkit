@@ -32,4 +32,7 @@ span.fancytree-node.critical > span.fancytree-title {
   background: #fee3e3;
   color: maroon;
 }
+span.fancytree-folder {
+  font-weight: bold;
+}
 
