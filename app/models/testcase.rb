@@ -17,7 +17,7 @@ class Testcase < ActiveRecord::Base
   scope :run, -> { where(run: true) }
   scope :not_run, -> { where(run: false) }
 
-  validates :folder_id, :name, :description, :run_in_production, :priority, presence: true, unless: :run
+  validates :folder_id, :name, :description, presence: true, unless: :run
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
   TESTCASE_PRIORITIES = %w(low normal critical)
