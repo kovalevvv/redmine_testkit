@@ -1,12 +1,13 @@
 <% if issue.testkits.present? %>
   <hr />
-  <p><strong>Тестирование</strong></p>
   <% if issue.testkits.run.present? %>
+  <p><strong>Тест-планы для выполнения</strong></p>
   <div>
     <%= render :partial => 'testkits/table_runs', locals: { runs: issue.testkits.run } %>
   </div>
   <% end %>
   <% if issue.testkits.report.present? %>
+  <p><strong>Отчеты тестирования</strong></p>
   <div>
     <%= render :partial => 'testkits/table_reports', locals: { reports: issue.testkits.report } %>
   </div>
