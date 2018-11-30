@@ -7,6 +7,8 @@ resources :projects do
     get 'new_run', to: 'testkits#new_run'
     get 'edit_run', to: 'testkits#edit_run'
     get 'report', to: 'testkits#show_report'
+    get 'move_from_archive', to: 'testkits#move_from_archive'
+    get 'new_from_archive', to: 'testkits#new_from_archive'
     get ':type/export', to: 'testkit_export#make', as: 'export'
     match 'create_run', to: 'testkits#create_run', via: [:patch, :post]
     match 'update_run', to: 'testkits#update_run', via: [:patch, :post]
@@ -19,7 +21,7 @@ resources :projects do
   get 'upload_file_to_step/:testcase_step_id', to: 'testcase_steps#upload_form', as: 'upload_file_to_step'
   match 'upload_file_to_step/:testcase_step_id', to: 'testcase_steps#upload', via: [:patch]
   delete 'destroy_step_attachment/:testcase_step_id/:id', to: 'testcase_steps#destroy', as: 'destroy_step_attachment'
-  
+
   resources :testcases
   resources :testkit_envs
   resources :testcase_folders do

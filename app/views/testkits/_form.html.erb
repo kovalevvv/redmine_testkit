@@ -8,6 +8,23 @@
     <%= f.text_area :description, style: "width: 77%; height: 100px;" %><br />
   </p>
   <p>
+    <%= f.label :issue_ids %>
+    <% @testkit.issues.each do |issue| %>
+      <%= text_field_tag :'testkit[issue_ids][]', issue.id, :class => "relation_issue_field" %><br>
+    <% end %>
+    <%= text_field_tag :'testkit[issue_ids][]', nil, :class => "relation_issue_field" %><br>
+    <small><%= link_to 'Добавить', '#', {:class => 'icon icon-add', :id => 'add_issue_relation_field'} %></small>
+    <br />
+  </p>
+  <p>
+    <%= f.label :version_ids %>
+    <% if @versions.present? %>
+      <%= f.collection_select :version_ids, @versions, :id, :name, {:include_blank => true}, :class => "in_width" %>
+    <% else %>c
+      Нет сборок
+    <% end %>
+  </p>
+  <p>
     <%= f.label 'Тест-кейсы' %>
     <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px;"></div>
   </p>
@@ -19,6 +36,8 @@ $(function() {
     source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
     <% when 'edit' %>
     source: { url: "<%= project_testkit_tree_path(:testkit_id => @testkit.id) %>", dataType: "json" },
+    <% when 'new_from_archive' %>
+    source: { url: "<%= project_testkit_tree_path(:testkit_id => @testkit_from.id) %>", dataType: "json" },
     <% when 'create', 'update' %>
     source: <%= "#{@testkit.tree.flatten.to_json}".html_safe %>,
   <% end %>
@@ -38,11 +57,38 @@ $(function() {
         },
   })
 })
+
+function observeAutocompleteFieldTestkit(element) {
+  $(document).ready(function() {
+    element.autocomplete($.extend({
+      source: <%= "'#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => Setting.cross_project_subtasks)}'".html_safe %>,
+      minLength: 2,
+      search: function(){$('#ajax-indicator').show();},
+      response: function(){$('#ajax-indicator').hide();}
+    }));
+    element.addClass('autocomplete');
+  });
+}
+
+observeAutocompleteFieldTestkit($('.relation_issue_field'));
+
+$(document).ready(function() {
+  $('#add_issue_relation_field').click(function() {
+    $("<%= j text_field_tag :'testkit[issue_ids][]', nil, :class => 'relation_issue_field' %><br>").insertAfter($('.relation_issue_field:last').next());
+    observeAutocompleteFieldTestkit($('.relation_issue_field:last'));
+    return false;
+  });
+});
 <% end %>
 
 <div id="testcases_ids">
 <% @testkit.testcases.each do |testcase| %>
     <%= f.hidden_field :testcase_ids, :multiple => true, :value => testcase.id %>
+<% end %>
+<% if action_name == 'new_from_archive' %>
+  <% @testkit_from.testcases.each do |testcase| %>
+      <%= f.hidden_field :testcase_ids, :multiple => true, :value => testcase.id %>
+  <% end %>
 <% end %>
 </div>
 

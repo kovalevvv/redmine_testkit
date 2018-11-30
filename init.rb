@@ -26,9 +26,8 @@ Redmine::Plugin.register :redmine_testkit do
     permission :view_testkit_envs, :testkit_envs => :index
     permission :manage_testkit_envs, :testkit_envs => [:new, :create, :edit, :update, :destroy]
     permission :view_reports, :testkits => [:index_reports, :show_report]
-    permission :testkits_archive, :testkits => :index_archive
     permission :delete_testcases, :testcases => :destroy
-    permission :delete_templates, :testkits => :destroy
+    permission :manage_archive, :testkits => [:index_archive, :destroy, :new_from_archive, :move_from_archive]
     permission :delete_runs, :testkits => :destroy
   end
 

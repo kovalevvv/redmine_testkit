@@ -12,7 +12,7 @@
   <% if User.current.allowed_to?(:view_reports, @project) %>
     <li><%= link_to l(:label_reports), project_testkit_reports_path, :class => ['show_report','index_reports'].include?(controller.action_name) ? 'selected' : ''  %></li>
   <% end %>
-  <% if User.current.allowed_to?(:testkits_archive, @project) %>
+  <% if User.current.allowed_to?(:manage_archive, @project) %>
     <li><%= link_to l(:label_archive), project_testkit_archive_path, :class => controller.action_name == "index_archive" ? 'selected' : ''  %></li>
   <% end %>
   </ul>

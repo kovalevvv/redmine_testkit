@@ -1,12 +1,14 @@
 class TestkitsController < ApplicationController
   menu_item :testkit
   before_filter :find_project_by_project_id, :authorize
-  before_filter :project_versions, :load_testkit, :make_envs, :only => [:new_run, :create_run, :edit_run, :update_run]
+  before_filter :project_versions, :only => [:new, :create, :edit, :new_from_archive]
+  before_filter :load_testkit, :make_envs, :only => [:new_run, :create_run, :edit_run, :update_run, :move_from_archive]
   helper :attachments
 
   def index
     @runs = Testkit.where(done: false, run: true, project: @project).order(:created_at)
     @last_reports = Testkit.where(done: true, project: @project).order(:done_date => :desc).first(5)
+    @reports_count = Testkit.where(done: true, project: @project).count
     @templates = Testkit.where(active: true, run: false, project: @project).order(:name)
   end
 
@@ -110,7 +112,7 @@ class TestkitsController < ApplicationController
     @testkit = Testkit.find(params[:id])
     if @testkit.template? and @testkit.have_runs?
       @testkit.active = false
-      @testkit.save
+      @testkit.save(validate: false)
       redirect_to project_testkits_path, notice: "Тестовый набор '#{@testkit.name}' перемещен в архив" and return
     elsif @testkit.template? and not @testkit.have_runs?
       @testkit.destroy
@@ -120,10 +122,22 @@ class TestkitsController < ApplicationController
         testcase.destroy
       end
       @testkit.destroy
-      redirect_to project_testkits_path, notice: "Запуск '#{@testkit.name}' удален" and return
+      redirect_to project_testkits_path, notice: "План тестирования '#{@testkit.name}' удален" and return
     else
       redirect_to project_testkits_path, notice: "Тут какая-то ошибка!"
     end
+  end
+
+  def new_from_archive
+    @testkit_from = Testkit.find(params[:testkit_id])
+    @testkit = @testkit_from.dup
+    @testkit.name = 'По шаблону: ' + @testkit_from.name
+  end
+
+  def move_from_archive
+    @testkit.active = true
+    @testkit.save(validate: false)
+    redirect_to project_testkits_path, notice: "План тестирования '#{@testkit.name}' перемещен из архива"
   end
 
   private

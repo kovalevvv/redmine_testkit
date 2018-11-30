@@ -13,10 +13,15 @@ class Testkit < ActiveRecord::Base
   accepts_nested_attributes_for :testcases
 
   validates :name, :project_id, :author_id, presence: true
-  validates :assigned_to_id, :client_env, :env, presence: true, if: :run
+  validates :name, uniqueness: true, unless: :run
+  validates :assigned_to_id, :client_env, :env, presence: true, if: :low_run?
 
   scope :run, -> { where(run: true, done: false) }
   scope :report, -> { where(run: true, done: true) }
+
+  def low_run?
+    true # пока заглушка
+  end
 
   def update_with_last_user_update(attributes)
     if template?
@@ -90,7 +95,10 @@ class Testkit < ActiveRecord::Base
   end
 
   def make_new_run(params)
-    Testkit.new(self.dup.attributes.merge(params.merge(:run => true, :parent_id => self.id, :author_id => User.current.id)))
+    run = Testkit.new(self.dup.attributes.merge(params.merge(:run => true, :parent_id => self.id, :author_id => User.current.id)))
+    run.issues << self.issues
+    run.versions << self.versions
+    run
   end
 
   def copy_testcases

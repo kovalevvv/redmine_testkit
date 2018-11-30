@@ -39,3 +39,9 @@ div.thumbnails {
 .testkit_step_border:hover {
   border: 2px solid orange;
 }
+
+.testkit-move { background-image: url(/images/move.png); }
+.testkit-run { background-image: url(/images/ticket_go.png); }
+
+.testkit-folder-add { background-image: url(/images/folder_open_add.png); }
+.testkit-testcase-add { background-image: url(/images/duplicate.png); }
