@@ -7,6 +7,14 @@ class TestcaseStep < ActiveRecord::Base
   def index
     testcase.steps.index(self)+1
   end
+
+  def if_doc
+    Sablon.content(:html, self.if.strip)
+  end
+
+  def then_doc
+    Sablon.content(:html, self.then.strip)
+  end
   
   def attachments_editable?(user=User.current)
     true

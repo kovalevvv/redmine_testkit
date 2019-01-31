@@ -16,8 +16,7 @@ class TestkitExportController < ApplicationController
       project: @project.name,
       report: @report.as_json
     }
-    context.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => :index}}, :methods => :duration_text}))    
-    
+    context.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:index, :if_doc, :then_doc], :except => [:if, :then]}}, :methods => :duration_text}))    
     send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, avaliable_types[params[:type].to_sym][:name], @report.name, Date.current]
   end
 

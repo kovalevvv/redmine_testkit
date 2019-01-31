@@ -25,8 +25,8 @@
 <% @testcase.steps.each_with_index do |step,i| %>
   <tr>
     <td align="center"><%= i+1 %></td>
-    <td><%= step.if %></td>
-    <td><%= step.then %></td>
+    <td><%=raw step.if %></td>
+    <td><%=raw step.then %></td>
   </tr>
 <% end %>
 </table>

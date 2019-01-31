@@ -5,8 +5,8 @@
       <th>Ожидаемый результат</th>
     </thead>
     <tr>
-      <td><%= f.text_area :if, style: "width: 100%; font-size: x-large;", rows: 3 %></td>
-      <td><%= f.text_area :then, style: "width: 100%; font-size: x-large;", rows: 3 %></td>
+      <td style="vertical-align: top;"><%= f.text_area :if, :class => "tinymce", rows: 3 %></td>
+      <td style="vertical-align: top;"><%= f.text_area :then, :class => "tinymce", rows: 3 %></td>
     </tr>
   </table> 
   <%= f.hidden_field :_destroy %>

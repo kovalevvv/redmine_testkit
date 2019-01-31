@@ -14,14 +14,10 @@ class Testkit < ActiveRecord::Base
 
   validates :name, :project_id, :author_id, presence: true
   validates :name, uniqueness: true, unless: :run
-  validates :assigned_to_id, :client_env, :env, presence: true, if: :low_run?
+  validates :assigned_to_id, :client_env, :env, presence: true, if: :run?
 
   scope :run, -> { where(run: true, done: false) }
   scope :report, -> { where(run: true, done: true) }
-
-  def low_run?
-    true # пока заглушка
-  end
 
   def update_with_last_user_update(attributes)
     if template?

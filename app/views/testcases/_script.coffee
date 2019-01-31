@@ -11,4 +11,5 @@ $(document).on 'click', 'form .add_steps', (event) ->
   $(this).before($(this).data('fields').replace(regexp, time))
   $('form > div > fieldset:visible').each (n,e) ->
     $(e).find('th').first().html('Шаг '+(n+1))
+  TinyMCERails.initialize('default', { language: "ru", plugins: ["paste","autoresize","lists","code"] })
   event.preventDefault()

@@ -71,3 +71,10 @@
 <p></p>
 <%= f.submit %>
 </div>
+
+
+<% content_for :header_tags do %>
+<%= tinymce_assets %>
+<% end %>
+
+<%= tinymce :language => "ru", :plugins => ["paste", "autoresize", "lists", "code"] %>
