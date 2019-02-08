@@ -5,11 +5,11 @@ class TestcaseFoldersController < ApplicationController
 
   def tree
     json = []
-    TestcaseFolder.where(parent_id: nil, project: @project).each do |folder|
+    TestcaseFolder.where(parent_id: nil, project: @project).order(:name).each_with_index do |folder,index|
       if params[:q].present? and params[:q].is_a? Array
-        json << folder.make_tree(tags: params[:q])
+        json << folder.make_tree(tags: params[:q], paragraph: (index+1).to_s)
       else
-        json << folder.make_tree
+        json << folder.make_tree(paragraph: (index+1).to_s)
       end
     end
     render json: json.flatten
