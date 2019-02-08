@@ -13,7 +13,7 @@ class Testkit < ActiveRecord::Base
   accepts_nested_attributes_for :testcases
 
   validates :name, :project_id, :author_id, presence: true
-  validates :name, uniqueness: true, unless: :run
+  validates :name, uniqueness: true, if: :run
   validates :assigned_to_id, :client_env, :env, presence: true, if: :run?
 
   scope :run, -> { where(run: true, done: false) }
