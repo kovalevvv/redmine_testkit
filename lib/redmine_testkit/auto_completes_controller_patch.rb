@@ -7,7 +7,7 @@ module RedmineTestkit
     module InstanceMethods
       def testcase_tags
         @name = params[:q].to_s
-        @tags = Testcase.available_tags project: @project, name_like: @name
+        @tags = Testcase.available_tags(project: @project, name_like: @name).order(:name)
         render layout: false, partial: 'testcase_tag_list'
       end
 
