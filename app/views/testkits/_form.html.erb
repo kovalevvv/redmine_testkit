@@ -95,3 +95,12 @@ $(document).ready(function() {
 </div>
 <%= f.submit 'Сохранить изменения' %>
 <%= button_tag 'Отменить', :type => :button, :onclick => "location.href = '#{project_testkits_path()}';", :style => 'vertical-align: middle; margin-top: 2px;' %>
+
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'jquery.elevator.min.js', :plugin => 'redmine_testkit' %>
+  <%= stylesheet_link_tag 'jquery.elevator.min', :plugin => 'redmine_testkit' %>
+<% end %>
+
+<%= javascript_tag do %>
+  $(function() { $.elevator(); })
+<% end %>
