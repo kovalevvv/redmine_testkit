@@ -1,12 +1,12 @@
-<fieldset style="margin-top: 3px;">
-  <table class="list">
+<fieldset class="step_fieldset">
+  <table class="list" width="100%" style="text-align: center;">
     <thead>
       <th>Шаг <%= f.options[:child_index]+1 %></th>
       <th>Ожидаемый результат</th>
     </thead>
     <tr>
-      <td style="vertical-align: top;"><%= f.text_area :if, :class => "tinymce", rows: 3 %></td>
-      <td style="vertical-align: top;"><%= f.text_area :then, :class => "tinymce", rows: 3 %></td>
+      <td style="vertical-align: top; width: 50%;"><%= f.text_area :if, :class => "tinymce", rows: 3 -%></td>
+      <td style="vertical-align: top; width: 50%;"><%= f.text_area :then, :class => "tinymce", rows: 3 -%></td>
     </tr>
   </table> 
   <%= f.hidden_field :_destroy %>

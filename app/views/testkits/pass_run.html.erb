@@ -56,8 +56,8 @@
                   <th>Файлы к шагу</th>
                 </tr>
                 <tr align="left">
-                  <td width="24%"><%=raw step.if %></td>
-                  <td width="24%"><%=raw step.then %></td>
+                  <td width="24%" align="left" valign="top" style="vertical-align: top;"><%=raw step.if %></td>
+                  <td width="24%" align="left" valign="top" style="vertical-align: top;"><%=raw step.then %></td>
                   <td width="4%"><%= sf.select :status, Testcase.status_list.collect { |s| [s.capitalize, s, { :class => "#{s}_style" }] }, {}, :class => 'testkit_select_style step_select' %></td>
                   <td width="24%"><%= sf.text_area :result, :style => "width: 99%;" %></td>
                   <td width="24%" style="font-size: 90%;"><div id="step_<%= step.id %>"><%= render :partial => 'testcase_steps/step', 

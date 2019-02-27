@@ -13,13 +13,13 @@
 <%= f.label :name do |label| %>
   <%= (label.translation + ' <span class="required"> *</span>').html_safe %>
 <% end %>
-<%= f.text_field :name, style: "width: 400px" %>
+<%= f.text_field :name, style: "width: 80%" %>
 </p>
 <p>
 <%= f.label :description do |label| %>
   <%= (label.translation + ' <span class="required"> *</span>').html_safe %>
 <% end %>
-<%= f.text_area :description, :rows => "3", style: "width: 400px;" %>
+<%= f.text_area :description, :class => "tinymce", style: "width: 80%;" %>
 </p>
 <p>
 <%= f.label :run_in_production do |label| %>
@@ -69,12 +69,33 @@
 
 <%= link_to_add_step "Добавить шаг", f, :steps %>
 <p></p>
-<%= f.submit %>
+<%= f.submit l(:button_save) %>
+<%= link_to l(:button_cancel), :back %>
 </div>
 
 
 <% content_for :header_tags do %>
 <%= tinymce_assets %>
+<style type="text/css">
+  td > .mce-container {
+    margin: 3px !important;
+  }
+  p > .mce-container {
+    padding: 3px !important;
+  }
+  .step_fieldset {
+    margin-top: 3px;
+  }
+  .step_fieldset:hover {
+    background-color:#ffffdd;
+  }
+</style>
 <% end %>
 
-<%= tinymce :language => "ru", :plugins => ["paste", "autoresize", "lists", "code"], paste_as_text: true %>
+<%= tinymce language: "ru",
+  plugins: ["paste", "autoresize", "lists", "code", "spellchecker"],
+  paste_as_text: true,
+  toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | spellchecker",
+  spellchecker_languages: "Russian=ru,English=en",
+  spellchecker_rpc_url: "http://speller.yandex.net/services/tinyspell" 
+%>
