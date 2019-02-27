@@ -5,19 +5,27 @@ div.thumbnails {
 .pass_style {
   background-color: green;
   color: #FFFFFF;
+  padding: 3px;
+  border-radius: 8px;
 }
 
 .fail_style {
   background-color: red;
+  padding: 3px;
+  border-radius: 8px;
 }
 
 .blocked_style {
   background-color: black;
   color: #FFFFFF;
+  padding: 3px;
+  border-radius: 8px;
 }
 
 .not_run_style {
   background-color: darkgray;
+  padding: 3px;
+  border-radius: 8px;
 }
 
 .testkit_select_style {
