@@ -30,7 +30,7 @@
     <fieldset style="margin-bottom: 10px; background: white;">
     <h2><%= "#{i+1}. #{testcase.name.mb_chars.capitalize} ##{testcase.parent.id}" %></h2>
       <% if testcase.description.present? %>
-        <p><%= testcase.description %></p>
+        <p><%=raw testcase.description %></p>
       <% end %>
       <% if testcase.attachments.present? %>
         <%= link_to_attachments testcase, :thumbnails => false %>

@@ -10,7 +10,7 @@
     <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
     <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
     <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
-    <li><b>Описание:</b> <%= @testcase.description %></li>
+    <li><b>Описание:</b> <%=raw @testcase.description %></li>
     <% if @testcase.attachments.present? %>
       <li><b>Файлы:</b></li>
       <%= link_to_attachments @testcase, :thumbnails => false %>
