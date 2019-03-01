@@ -9,6 +9,9 @@ ru:
   label_testkit_envs: Окружения
   label_reports: Отчеты
   label_archive: Архив
+  word_converter_error: Ошибка конвертации в Word
+  word_template_pmi: ПМИ
+  word_template_ps: Протокол тестирования
   select_yes: Да
   select_no: Нет
   select_priority_low: Низкий

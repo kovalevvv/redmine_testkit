@@ -1,3 +1,27 @@
+class TestcaseValidator < ActiveModel::Validator
+  def validate(record)
+    testkit = Testkit.new(author: User.current, created_at: Time.now, parent: Testkit.new(name: "test"), assigned_to: User.current)
+    begin
+      docx_template = testkit.get_word_template(:pmi)
+      template = Sablon.template(File.expand_path(docx_template))
+    rescue StandardError => e
+      record.errors[:base] << "%s: %s" % [I18n.t(:word_converter_error), e.message]
+    end
+
+    context = {
+          project: 'test',
+          report: testkit.as_json
+        }.merge!(:testcases => [record.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc]})])
+
+    begin
+      template.render_to_string(context)
+    rescue StandardError => e
+      record.errors[:base] << "%s: %s" % [I18n.t(:word_converter_error), e.message]
+    end
+  end
+
+end
+
 class Testcase < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
   belongs_to :folder, :class_name => 'TestcaseFolder', foreign_key: "folder_id"
@@ -18,6 +42,7 @@ class Testcase < ActiveRecord::Base
   scope :not_run, -> { where(run: false) }
 
   validates :folder_id, :name, :description, presence: true, unless: :run
+  validates_with TestcaseValidator
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
   TESTCASE_PRIORITIES = %w(low normal critical)

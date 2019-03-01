@@ -5,36 +5,28 @@ class TestkitExportController < ApplicationController
   def make
     @report = Testkit.find(params[:testkit_id])
     begin
-      docx_template = find_template(params[:type].to_sym)
-    rescue Exception => error
+      docx_template = @report.get_word_template(type.to_sym)
+      template = Sablon.template(File.expand_path(docx_template))
+    rescue StandardError => e
       return render :not_found
     end
-
-    template = Sablon.template(File.expand_path(docx_template))
 
     context = {
       project: @project.name,
       report: @report.as_json
-    }
-    context.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:index, :if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc]}))
+    }.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:index, :if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc]}))
+
     begin    
-      send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, avaliable_types[params[:type].to_sym][:name], @report.name, Date.current]
+      send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, I18n.t('word_template_'+type), @report.name, Date.current]
     rescue StandardError => e
       render_error :message => e.message
     end
   end
 
-  private 
+  private
 
-  def avaliable_types
-    {
-      :ps => {filename: 'ps.docx', name: 'Протокол тестирования'},
-      :pmi => {filename: 'pmi.docx', name: 'ПМИ'}
-    }
-  end
-
-  def find_template(type)
-    lookup_context.find_template("#{controller_path}/#{avaliable_types[type][:filename]}").identifier
+  def type
+    params.require(:type)
   end
 
 end
