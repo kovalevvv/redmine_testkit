@@ -4,10 +4,6 @@ class TestcaseStep < ActiveRecord::Base
   acts_as_attachable
   extend OrderAsSpecified
 
-  def index
-    testcase.steps.index(self)+1
-  end
-
   def if_doc
     Sablon.content(:html, self.if.strip)
   end

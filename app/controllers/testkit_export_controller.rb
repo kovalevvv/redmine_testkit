@@ -14,7 +14,7 @@ class TestkitExportController < ApplicationController
     context = {
       project: @project.name,
       report: @report.as_json
-    }.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:index, :if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc]}))
+    }.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc]}))
 
     begin    
       send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, I18n.t('word_template_'+type), @report.name, Date.current]

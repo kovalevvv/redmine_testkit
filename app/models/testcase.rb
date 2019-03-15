@@ -26,7 +26,7 @@ class Testcase < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
   belongs_to :folder, :class_name => 'TestcaseFolder', foreign_key: "folder_id"
 
-  has_many :steps, -> { order(:id) }, class_name: "TestcaseStep", dependent: :destroy
+  has_many :steps, -> { order(:position) }, class_name: "TestcaseStep", dependent: :destroy
   accepts_nested_attributes_for :steps, allow_destroy: true
 
   has_and_belongs_to_many :testkits

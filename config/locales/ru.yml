@@ -12,6 +12,7 @@ ru:
   word_converter_error: Ошибка конвертации в Word
   word_template_pmi: ПМИ
   word_template_ps: Протокол тестирования
+  label_add_step: Добавить шаг
   select_yes: Да
   select_no: Нет
   select_priority_low: Низкий
