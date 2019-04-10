@@ -4,8 +4,7 @@ $(document).on 'click', 'form .remove_steps', (event) ->
   $(this).closest('fieldset').prev('.add_steps').hide()
   $('form > div > fieldset:visible').each (n,e) ->
     $(e).find('th').first().html('Шаг '+(n+1))
-  $('.position').each (n) ->
-    $(this).val(n+1)
+    $(e).find('.position').val(n+1)
   event.preventDefault()
  
 $(document).on 'click', 'form .add_steps', (event) ->
@@ -15,8 +14,7 @@ $(document).on 'click', 'form .add_steps', (event) ->
   $(this).after($(this).data('fields').replace(regexp, time))
   $('form > div > fieldset:visible').each (n,e) ->
     $(e).find('th').first().html('Шаг '+(n+1))
-  $('.position').each (n) ->
-    $(this).val(n+1)
+    $(e).find('.position').val(n+1)
   TinyMCEinit();
   event.preventDefault()
   
