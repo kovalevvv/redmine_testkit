@@ -49,12 +49,19 @@ class Testcase < ActiveRecord::Base
 
   include ActionView::Helpers::DateHelper
 
+  def self.clear_hidden(html)
+    out = Nokogiri::HTML.fragment(html)
+    out.css(".hide").each(&:remove)
+    out.css("p").each { |p| p.remove if p.content.blank? }
+    out.to_html.strip
+  end
+
   def duration_text
     distance_of_time_in_words(0, duration.minutes)
   end
 
   def description_doc
-    Sablon.content(:html, self.description.strip)
+    Sablon.content(:html, Testcase.clear_hidden(self.description))
   end
 
   def chart_values

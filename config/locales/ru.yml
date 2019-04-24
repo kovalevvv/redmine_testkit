@@ -31,6 +31,8 @@ ru:
   field_testcase_folder: Каталог
   field_testcase_name: Название тест-кейса
   field_testcase_run_in_production: Возможность выполнения на продуктиве
+  hidden_text: Скрытый текст
+  input_text_tiny_modal: Введите текст
   testcase:
     zero:  "%{count} тест-кейсов"
     one:   "%{count} тест-кейс"

@@ -53,3 +53,7 @@ div.thumbnails {
 
 .testkit-folder-add { background-image: url(/images/folder_open_add.png); }
 .testkit-testcase-add { background-image: url(/images/duplicate.png); }
+
+.hide {
+  border: 1px dotted black;
+}

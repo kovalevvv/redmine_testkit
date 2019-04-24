@@ -98,14 +98,37 @@
 <% end %>
 
 <%= javascript_tag do %>
+tinymce.PluginManager.add('hidden', function(editor, url) {
+    // Add a button that opens a window
+    editor.addButton('insertHidden', {
+        text: '<%= l(:hidden_text) %>',
+        icon: false,
+        onclick: function() {
+            // Open window
+            editor.windowManager.open({
+                title: '<%= l(:input_text_tiny_modal) %>',
+                body: [
+                    {type: 'textbox', name: 'description'}
+                ],
+                onsubmit: function(e) {
+                    // Insert content when the window form is submitted
+                    editor.insertContent('<p>&nbsp;</p><fieldset class="hide"><legend><%= l(:hidden_text) %></legend>' + e.data.description + '</fieldset><p>&nbsp;</p>');
+                }
+            });
+        }
+    });
+});
+
+
 function TinyMCEinit() {
   <%= tinymce_configurations_javascript %>
   <%= tinymce_javascript language: "ru",
-    plugins: ["paste", "autoresize", "lists", "code", "spellchecker"],
+    plugins: ["paste", "autoresize", "lists", "code", "spellchecker", "hidden"],
     paste_as_text: true,
-    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | spellchecker",
+    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | spellchecker | insertHidden | removeformat",
     spellchecker_languages: "Russian=ru,English=en",
-    spellchecker_rpc_url: "https://speller.yandex.net/services/tinyspell" 
+    spellchecker_rpc_url: "https://speller.yandex.net/services/tinyspell",
+    content_css: "/plugin_assets/redmine_testkit/stylesheets/tiny.css"
   %>
 }
 $(document).ready(function() { TinyMCEinit() })

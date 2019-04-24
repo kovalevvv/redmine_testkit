@@ -47,7 +47,7 @@
   <% @report.testcases.each_with_index do |testcase,i| %>
     <h1><%= "#{i+1}. #{testcase.name.mb_chars.capitalize} ##{testcase.parent.id}" %></h1>
       <% if testcase.description.present? %>
-        <p><%=raw testcase.description %></p>
+        <p><%=raw Testcase.clear_hidden(testcase.description) %></p>
       <% end %>
       <% if testcase.attachments.present? %>
         <%= link_to_attachments testcase, :thumbnails => true %>
@@ -71,8 +71,8 @@
                   <th>Статус</th>
                 </tr>
                 <tr align="left">
-                  <td width="49%"><%= raw step.if %></td>
-                  <td width="49%"><%= raw step.then %></td>
+                  <td width="49%"><%= raw Testcase.clear_hidden(step.if) %></td>
+                  <td width="49%"><%= raw Testcase.clear_hidden(step.then) %></td>
                   <td width="4%" class="<%= step.status %>_style"><%= step.status %></td>
                 </tr>
                 <tr>
