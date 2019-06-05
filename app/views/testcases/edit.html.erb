@@ -4,7 +4,6 @@
 <h3 class="title icon icon-folder"><%= make_folders_legend(@testcase.folder) %></h3>
 <% end %>
 <%= error_messages_for @testcase %>
-<%= javascript_tag render 'script' %>
 <%= form_for @testcase, url: project_testcase_path do |f| %>
   <%= render :partial => 'form', locals: { f: f} %>
 <% end %>

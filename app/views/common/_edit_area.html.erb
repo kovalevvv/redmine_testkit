@@ -1,0 +1,15 @@
+<div class="box">
+  <div class="tabs">
+    <ul>
+      <li><a href="#" class="edit <%= 'selected' unless f.object[at].present? %>" onclick="backToEdit(this); return false;"><%= l(:label_edit_tab) %></a></li>
+      <li><%= link_to l(:label_preview), '#', :onclick => "testkitPreview('#{escape_javascript @testcase.new_record? ? preview_project_testcases_path : project_testcase_preview_path(testcase_id: @testcase.id)}', this); return false;", :class => "preview #{'selected' if f.object[at].present?}" %></li>
+    </ul>
+  </div>
+  <% if f.object[at].present? %>
+    <div style="display: none;" class="edit"><%= f.text_area at, :class => "wiki-edit", rows: rows -%></div>
+    <div class="preview"><%= textilizable f.object[at], :attachments => @attachments, :object => f.object.class == Testcase ? f.object : f.object.testcase %></div>
+  <% else %>
+    <div class="edit"><%= f.text_area at, :class => "wiki-edit", rows: rows -%></div>
+    <div style="display: none;" class="preview"></div>
+  <% end %>
+</div>

@@ -1,12 +1,26 @@
 <fieldset class="step_fieldset">
-  <table class="list" width="100%" style="text-align: center;">
+  <table width="100%" style="table-layout: fixed;">
     <thead>
-      <th>Шаг <%= f.options[:child_index]+1 %></th>
-      <th>Ожидаемый результат</th>
+      <th align="left">Шаг <%= f.options[:child_index]+1 %></th>
+      <th align="left">Ожидаемый результат</th>
+      <th align="left">Дополнительные данные</th>
     </thead>
     <tr>
-      <td style="vertical-align: top; width: 50%;"><%= f.text_area :if, :class => "tinymce", rows: 3 -%></td>
-      <td style="vertical-align: top; width: 50%;"><%= f.text_area :then, :class => "tinymce", rows: 3 -%></td>
+      <td style="vertical-align: top; max-width: 35%; width: 35%; padding: 0px">
+        <div class="box">
+          <%= render partial: 'common/edit_area', locals: { f: f, at: :if, rows: 10 } %>
+        </div>
+      </td>
+      <td style="vertical-align: top; width: 35%; padding: 0px">
+        <div class="box">
+          <%= render partial: 'common/edit_area', locals: { f: f, at: :then, rows: 10 } %>
+        </div>
+      </td>
+      <td style="vertical-align: top; width: 30%; padding: 0px">
+        <div class="box">
+          <%= render partial: 'common/edit_area', locals: { f: f, at: :info, rows: 10 } %>
+        </div>
+      </td>
     </tr>
   </table> 
   <%= f.hidden_field :position, :value => f.options[:child_index]+1, :class => 'position' %>

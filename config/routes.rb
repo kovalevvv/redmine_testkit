@@ -22,7 +22,14 @@ resources :projects do
   match 'upload_file_to_step/:testcase_step_id', to: 'testcase_steps#upload', via: [:patch]
   delete 'destroy_step_attachment/:testcase_step_id/:id', to: 'testcase_steps#destroy', as: 'destroy_step_attachment'
 
-  resources :testcases
+  resources :testcases do 
+    collection do
+      get :import, action: :new_import
+      post :import
+      post :preview
+    end
+    post :preview
+  end
   resources :testkit_envs
   resources :testcase_folders do
     collection do

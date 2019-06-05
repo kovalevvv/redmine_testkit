@@ -5,7 +5,9 @@ module TestcasesHelper
     fields = f.fields_for(association, new_object, child_index: id) do |builder|
        render(association.to_s.singularize, f: builder)
     end
-    link_to(name, '#', class: "add_steps icon icon-add", data: {id: id, fields: fields.gsub("\n", "")})
+    content_tag :div, :class => 'buttons' do
+      link_to(name, '#', class: "add_steps icon icon-add", data: {id: id, fields: fields.gsub("\n", "")})
+    end
   end
 
   def make_folders_legend(folder, text="", first: true)

@@ -8,6 +8,11 @@ Rails.application.config.to_prepare do
   end
 end
 
+Sablon.configure do |config|
+  config.register_html_tag(:del, :inline, properties: { highlight: 'cyan' })
+  config.register_html_tag(:code, :inline, properties: { highlight: 'yellow' })
+end
+
 Redmine::Plugin.register :redmine_testkit do
   name 'Redmine Testkit plugin'
   author 'Vladimir Kovalev'
@@ -22,7 +27,7 @@ Redmine::Plugin.register :redmine_testkit do
     permission :create_and_edit_runs, :testkits => [:new_run, :create_run, :edit_run, :update_run]
     permission :pass_runs, {:testkits => [:pass_run], :testcase_steps => [:upload_form, :upload, :destroy]}
     permission :view_testcases, {:testcases => [:index, :show], :testcase_folders => [:tree, :node_menu]}
-    permission :add_and_edit_testcases, {:testcases => [:new, :create, :edit, :update], :testcase_folders => [:new, :create, :edit, :update, :destroy]}
+    permission :add_and_edit_testcases, {:testcases => [:new, :create, :edit, :update, :new_import, :import, :preview], :testcase_folders => [:new, :create, :edit, :update, :destroy]}
     permission :view_testkit_envs, :testkit_envs => :index
     permission :manage_testkit_envs, :testkit_envs => [:new, :create, :edit, :update, :destroy]
     permission :view_reports, :testkits => [:index_reports, :show_report]

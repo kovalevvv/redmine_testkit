@@ -49,19 +49,28 @@ class Testcase < ActiveRecord::Base
 
   include ActionView::Helpers::DateHelper
 
-  def self.clear_hidden(html)
-    out = Nokogiri::HTML.fragment(html)
-    out.css(".hide").each(&:remove)
-    out.css("p").each { |p| p.remove if p.content.blank? }
-    out.to_html.strip
-  end
-
   def duration_text
     distance_of_time_in_words(0, duration.minutes)
   end
 
+  def self.clear_text(textile)
+    n = Nokogiri::XML.fragment(ApplicationController.helpers.textilizable(textile))
+    n.css('img').remove
+    n.css('abbr').each {|node| node.replace "#{n.text}(#{n.attribute('title')})"}
+    n.css('ins').each do |node|
+      new_node = Nokogiri::XML::Node.new('u', n)
+      new_node.content = node.text
+      node.replace new_node
+    end
+    n.css('a.wiki-anchor').remove
+    n.css('a').remove {|node| node.attribute('name').present? }
+    n.css('blockquote').reverse.each {|node| node.replace node.inner_html }
+    n.css('pre').each {|node| node.replace node.inner_html }
+    n.to_html
+  end
+
   def description_doc
-    Sablon.content(:html, Testcase.clear_hidden(self.description))
+    Sablon.content(:html, Testcase.clear_text(self.description))
   end
 
   def chart_values

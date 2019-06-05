@@ -10,7 +10,7 @@
     <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
     <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
     <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
-    <li><b>Описание:</b> <%=raw @testcase.description %></li>
+    <li><b>Описание:</b> <%= textilizable @testcase.description, :attachments => @attachments, :object => @testcase %></li>
     <% if @testcase.attachments.present? %>
       <li><b>Файлы:</b></li>
       <%= link_to_attachments @testcase, :thumbnails => false %>
@@ -21,12 +21,14 @@
    <th>#</th>
    <th>Шаг</th>
    <th>Ожидаемый результат</th>
+   <th>Дополнительные данные</th>
  </thead>
 <% @testcase.steps.each_with_index do |step,i| %>
   <tr>
     <td align="center"><%= i+1 %></td>
-    <td align="left" valign="top" style="vertical-align: top;"><%=raw step.if %></td>
-    <td align="left" valign="top" style="vertical-align: top;"><%=raw step.then %></td>
+    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.if, :attachments => @attachments, :object => @testcase %></td>
+    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
+    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
   </tr>
 <% end %>
 </table>

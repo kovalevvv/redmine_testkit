@@ -9,6 +9,7 @@ ru:
   label_testkit_envs: Окружения
   label_reports: Отчеты
   label_archive: Архив
+  label_edit_tab: Редактирование
   word_converter_error: Ошибка конвертации в Word
   word_template_pmi: ПМИ
   word_template_ps: Протокол тестирования
@@ -18,7 +19,7 @@ ru:
   select_priority_low: Низкий
   select_priority_normal: Средний
   select_priority_critical: Высокий
-  field_run_in_production: Возможность выполнения на продуктиве
+  field_run_in_production: Выполнение на продуктиве?
   field_testkit_client_env: Окружение клиента
   field_testkit_env: Площадка тестирования
   field_issue_ids: 'Задачи #'
@@ -30,9 +31,10 @@ ru:
   project_module_testkit: Тестирование (Бета)
   field_testcase_folder: Каталог
   field_testcase_name: Название тест-кейса
-  field_testcase_run_in_production: Возможность выполнения на продуктиве
+  field_testcase_run_in_production: Выполнение на продуктиве?
   hidden_text: Скрытый текст
   input_text_tiny_modal: Введите текст
+  button_import_testcase: Импорт из CSV
   testcase:
     zero:  "%{count} тест-кейсов"
     one:   "%{count} тест-кейс"

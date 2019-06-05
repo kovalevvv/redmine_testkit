@@ -16,12 +16,6 @@
 <%= f.text_field :name, style: "width: 80%" %>
 </p>
 <p>
-<%= f.label :description do |label| %>
-  <%= (label.translation + ' <span class="required"> *</span>').html_safe %>
-<% end %>
-<%= f.text_area :description, :class => "tinymce", style: "width: 80%;" %>
-</p>
-<p>
 <%= f.label :run_in_production do |label| %>
   <%= (label.translation + ' <span class="required"> *</span>').html_safe %>
 <% end %>
@@ -59,34 +53,39 @@
   showAutocompleteOnFocus: true,
 });" %>
 </p>
+</div>
+<p>
+<div class="box">
+<%= f.label :description do |label| %>
+  <%= "<h3>#{label.translation} <span class=\"required\"> *</span></h3>".html_safe %>
+<% end %>
+  <%= render partial: 'common/edit_area', locals: { f: f, at: :description, rows: 15 } %>
+</div>
+<%= wikitoolbar_for ActionView::Base::Tags::Base.new(f.object_name, :description, :this_param_is_ignored).send(:tag_id) %>
+</p>
+<div class="box">
 <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label><%= render :partial => 'attachments/form', :locals => {:container => @testcase} %></p>
-
 <%= link_to_attachments @testcase, :thumbnails => true %>
-<hr />
+</div>
+
+<p><%= f.submit l(:button_save) %></p>
+
 <%= f.fields_for :steps do |builder| %>
   <%= link_to_add_step l(:label_add_step), f, :steps %>
   <%= render 'step', f: builder %>
+  <%= wikitoolbar_for ActionView::Base::Tags::Base.new(builder.object_name, :if, :this_param_is_ignored).send(:tag_id) %>
+  <%= wikitoolbar_for ActionView::Base::Tags::Base.new(builder.object_name, :then, :this_param_is_ignored).send(:tag_id) %>
+  <%= wikitoolbar_for ActionView::Base::Tags::Base.new(builder.object_name, :info, :this_param_is_ignored).send(:tag_id) %>
 <% end %>
 <%= link_to_add_step l(:label_add_step), f, :steps %>
 
-
-<p></p>
-<%= f.submit l(:button_save) %>
-<%= link_to l(:button_cancel), :back %>
-</div>
-
+<p><%= f.submit l(:button_save) %>&nbsp;<%= link_to l(:button_cancel), :back %></p>
 
 <% content_for :header_tags do %>
-<%= tinymce_assets %>
+
 <style type="text/css">
   .add_steps {
     font-weight: bold;
-  }
-  td > .mce-container {
-    margin: 3px !important;
-  }
-  p > .mce-container {
-    padding: 3px !important;
   }
   .step_fieldset {
     margin-top: 3px;
@@ -94,42 +93,53 @@
   .step_fieldset:hover {
     background-color:#ffffdd;
   }
+  .box div.preview {
+    background: #F7F8FD;
+    border: 1px solid #e4e4e4;
+    min-height: 193px;
+    padding: 3px;
+  }
+  .draft_background {
+    background: url(/images/draft.png) !important;
+  }
 </style>
-<% end %>
 
 <%= javascript_tag do %>
-tinymce.PluginManager.add('hidden', function(editor, url) {
-    // Add a button that opens a window
-    editor.addButton('insertHidden', {
-        text: '<%= l(:hidden_text) %>',
-        icon: false,
-        onclick: function() {
-            // Open window
-            editor.windowManager.open({
-                title: '<%= l(:input_text_tiny_modal) %>',
-                body: [
-                    {type: 'textbox', name: 'description'}
-                ],
-                onsubmit: function(e) {
-                    // Insert content when the window form is submitted
-                    editor.insertContent('<p>&nbsp;</p><fieldset class="hide"><legend><%= l(:hidden_text) %></legend>' + e.data.description + '</fieldset><p>&nbsp;</p>');
-                }
-            });
-        }
-    });
-});
-
-
-function TinyMCEinit() {
-  <%= tinymce_configurations_javascript %>
-  <%= tinymce_javascript language: "ru",
-    plugins: ["paste", "autoresize", "lists", "code", "spellchecker", "hidden"],
-    paste_as_text: true,
-    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | spellchecker | insertHidden | removeformat",
-    spellchecker_languages: "Russian=ru,English=en",
-    spellchecker_rpc_url: "https://speller.yandex.net/services/tinyspell",
-    content_css: "/plugin_assets/redmine_testkit/stylesheets/tiny.css"
-  %>
+function testkitPreview(url, e) {
+  edit = $(e).closest('div').next('div.edit')
+  preview = $(e).closest('div').next('div.edit').next('div.preview')
+  content = $(e).closest('div').next('div.edit').find('textarea').val()
+  edit_link = $(e).closest('ul').find('a.edit')
+  attachments = {}
+  $.each($('#attachments_form input').serializeArray(), function() {
+    attachments[this.name] = this.value;
+  });
+  $.ajax({
+    url: url,
+    type: 'post',
+    data: $.extend({content: content}, attachments),
+    success: function(data){
+      edit.hide()
+      preview.html(data)
+      preview.show()
+      preview.addClass('draft_background')
+      $(e).addClass('selected')
+      edit_link.removeClass('selected')
+    }
+  });
 }
-$(document).ready(function() { TinyMCEinit() })
+
+function backToEdit(e) {
+  preview_link = $(e).closest('ul').find('a.preview')
+  edit = $(e).closest('div').next('div.edit')
+  preview = $(e).closest('div').next('div.edit').next('div.preview')
+  preview.hide()
+  edit.show()
+  $(e).addClass('selected')
+  preview_link.removeClass('selected')
+}
+<% end -%>
+
 <% end %>
+
+<%= javascript_tag render 'script' %>
