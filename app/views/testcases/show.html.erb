@@ -28,7 +28,7 @@
     <td align="center"><%= i+1 %></td>
     <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.if, :attachments => @attachments, :object => @testcase %></td>
     <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
-    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
+    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :attachments => @attachments, :object => @testcase %></td>
   </tr>
 <% end %>
 </table>
