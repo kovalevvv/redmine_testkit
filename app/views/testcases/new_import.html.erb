@@ -1,3 +1,12 @@
+<h3 class="title"><%= l(:button_import_testcase) %></h3>
+<div>
+  <p>Для подготовки таблицы в GoggleDocs необходимо:</p>
+    <ul>
+      <li>Создать три колонки с названиями Шаг, Ожидаемый результат, Дополнительные данные</li>
+      <li>Заполнить ячеки этих колонок сответствующими данными</li>
+      <li>Через меню Файл -> Скачать как -> CSV-файл(текущий лист) выгрузить в файл</li>
+    </ul>
+</div>
 <%= form_tag(import_project_testcases_path, multipart: true) do -%>
   <div><%= file_field_tag :import_file, accept: '.csv' %></div>
   <div><%= submit_tag l(:button_submit) %></div>

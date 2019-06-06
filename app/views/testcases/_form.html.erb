@@ -68,7 +68,7 @@
 <%= link_to_attachments @testcase, :thumbnails => true %>
 </div>
 
-<p><%= f.submit l(:button_save) %></p>
+<p><%= f.submit l(:button_save), disabled: true %>&nbsp;<%= link_to l(:button_cancel), :back %></p>
 
 <%= f.fields_for :steps do |builder| %>
   <%= link_to_add_step l(:label_add_step), f, :steps %>
@@ -79,7 +79,7 @@
 <% end %>
 <%= link_to_add_step l(:label_add_step), f, :steps %>
 
-<p><%= f.submit l(:button_save) %>&nbsp;<%= link_to l(:button_cancel), :back %></p>
+<p><%= f.submit l(:button_save), disabled: true %>&nbsp;<%= link_to l(:button_cancel), :back %></p>
 
 <% content_for :header_tags do %>
 
@@ -138,6 +138,13 @@ function backToEdit(e) {
   $(e).addClass('selected')
   preview_link.removeClass('selected')
 }
+
+$(document).ready(function() {
+    $('input[type=submit]').each(function () {
+      $(this).attr('disabled', false)
+    })
+});
+
 <% end -%>
 
 <% end %>

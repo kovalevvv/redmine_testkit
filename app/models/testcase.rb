@@ -48,6 +48,7 @@ class Testcase < ActiveRecord::Base
   TESTCASE_PRIORITIES = %w(low normal critical)
 
   include ActionView::Helpers::DateHelper
+  include AttachmentPatch if defined?(AttachmentPatch) == 'constant' && AttachmentPatch.class == Module  
 
   def duration_text
     distance_of_time_in_words(0, duration.minutes)
