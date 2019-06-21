@@ -27,6 +27,7 @@ resources :projects do
       get :import, action: :new_import
       post :import
       post :preview
+      get ':copy_from/copy', action: :new, as: :copy
     end
     post :preview
   end

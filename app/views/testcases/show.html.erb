@@ -1,35 +1,47 @@
-<h3 class="title"><%= make_folders_legend(@testcase.folder, first: false) + @testcase.name + ' #' + @testcase.id.to_s %></h3>
-<div class="wiki">
-  <ul>
-    <li><b>Автор:</b> <%= @testcase.author %></li>
-    <li><b>Создано:</b> <%= format_time(@testcase.created_at) %></li>
-    <li><b>Обновлено:</b> <%= format_time(@testcase.updated_at) %></li>
-    <li><b><%= t(:field_run_in_production) %>:</b> <%= @testcase.run_in_production ? t(:select_yes) : t(:select_no) %></li>
-    <li><b><%= t(:field_priority) %>:</b> <%= t('select_priority_'+@testcase.priority) %></li>
-    <li><b><%= t(:field_duration) %>:</b> <%= distance_of_time_in_words(0, @testcase.duration.minutes) %></li>
-    <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
-    <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
-    <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
-    <li><b>Описание:</b> <%= textilizable @testcase.description, :attachments => @attachments, :object => @testcase %></li>
-    <% if @testcase.attachments.present? %>
-      <li><b>Файлы:</b></li>
-      <%= link_to_attachments @testcase, :thumbnails => false %>
-    <% end %>
-  </ul>
-<table class="list">
- <thead>
-   <th>#</th>
-   <th>Шаг</th>
-   <th>Ожидаемый результат</th>
-   <th>Дополнительные данные</th>
- </thead>
-<% @testcase.steps.each_with_index do |step,i| %>
-  <tr>
-    <td align="center"><%= i+1 %></td>
-    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.if, :attachments => @attachments, :object => @testcase %></td>
-    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
-    <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :attachments => @attachments, :object => @testcase %></td>
-  </tr>
-<% end %>
-</table>
+<h3 class="title">&nbsp;</h3>
+<div id="content">
+  <% if params[:buttons] %>
+  <div class="contextual" style="text-align: right;">
+  <%= link_to 'Редактировать', edit_project_testcase_path(id: @testcase.id), :class => 'icon icon-edit' if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
+  <%= link_to 'Копировать', copy_project_testcases_path(copy_from: @testcase.id), :class => 'icon icon-copy' if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
+  <%= link_to 'Удалить', project_testcase_path(id: @testcase.id), :method => :delete, :class => 'icon icon-del' unless @testcase.testkits.present? || Testcase.where(parent_id: @testcase.id).present? || !User.current.allowed_to?(:delete_testcases, @project) %>
+  </div>
+  <% end %>
+  <h2><%= make_folders_legend(@testcase.folder, first: false) + @testcase.name_with_id %></h2>
+  <div class="issue">
+    <ul>
+      <li><b>Автор:</b> <%= @testcase.author %></li>
+      <li><b>Создано:</b> <%= format_time(@testcase.created_at) %></li>
+      <li><b>Обновлено:</b> <%= format_time(@testcase.updated_at) %></li>
+      <li><b><%= t(:field_run_in_production) %>:</b> <%= @testcase.run_in_production ? t(:select_yes) : t(:select_no) %></li>
+      <li><b><%= t(:field_priority) %>:</b> <%= t('select_priority_'+@testcase.priority) %></li>
+      <li><b><%= t(:field_duration) %>:</b> <%= distance_of_time_in_words(0, @testcase.duration.minutes) %></li>
+      <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
+      <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
+      <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
+      <li><b>Описание:</b> <%= textilizable @testcase.description, :attachments => @attachments, :object => @testcase %></li>
+      <% if @testcase.attachments.present? %>
+        <li><b>Файлы:</b></li>
+        <%= link_to_attachments @testcase, :thumbnails => false %>
+      <% end %>
+    </ul>
+  </div>
+  
+  <table class="list">
+   <thead>
+     <th>#</th>
+     <th>Шаг</th>
+     <th>Ожидаемый результат</th>
+     <th>Дополнительные данные</th>
+   </thead>
+  <% @testcase.steps.each_with_index do |step,i| %>
+    <tr>
+      <td align="center"><%= i+1 %></td>
+      <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.if, :attachments => @attachments, :object => @testcase %></td>
+      <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
+      <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :attachments => @attachments, :object => @testcase %></td>
+    </tr>
+  <% end %>
+  </table>
+
 </div>

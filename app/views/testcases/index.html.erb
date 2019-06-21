@@ -61,7 +61,7 @@ function updateTree() {
 <%= javascript_tag do %>
 $(function() {
   $('#testcases').fancytree({
-    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
+    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" }
   })
 })
 <% end %>
@@ -69,10 +69,11 @@ $(function() {
 <%= javascript_tag do %>
   $(function() { contextMenuInit('<%= node_menu_project_testcase_folders_path %>') })
   $(function() { $.elevator(); })
+  $(function() { $(document).dblclick({buttons: true}, dblclickShowTestcase) })
 <% end %>
 
 <% content_for :header_tags do %>
-  <%= javascript_include_tag 'jquery.fancytree-all.min', 'context_menu_testkit', :plugin => 'redmine_testkit' %>
+  <%= javascript_include_tag 'jquery.fancytree-all.min', 'context_menu_testkit', 'show_testcase', :plugin => 'redmine_testkit' %>
   <%= stylesheet_link_tag 'ui.fancytree.min', :plugin => 'redmine_testkit' %>
   <%= javascript_include_tag 'jquery.elevator.min.js', :plugin => 'redmine_testkit' %>
   <%= stylesheet_link_tag 'jquery.elevator.min', :plugin => 'redmine_testkit' %>

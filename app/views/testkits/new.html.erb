@@ -6,7 +6,12 @@
 <% end %>
 
 <% content_for :header_tags do %>
-  <%= javascript_include_tag 'jquery.fancytree-all.min', :plugin => 'redmine_testkit' %>
+  <%= javascript_include_tag 'jquery.fancytree-all.min', 'show_testcase', :plugin => 'redmine_testkit' %>
   <%= stylesheet_link_tag 'ui.fancytree.min', :plugin => 'redmine_testkit' %>
 <% end %>
+
+<%= javascript_tag do %>
+  $(function() { $(document).dblclick({buttons: false}, dblclickShowTestcase) })
+<% end %>
+
 

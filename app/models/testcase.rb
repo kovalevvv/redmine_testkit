@@ -109,16 +109,26 @@ class Testcase < ActiveRecord::Base
     TESTCASE_PRIORITIES
   end
 
+  def name_with_id
+    "[##{id}] #{name}"
+  end
+
   def to_tree(testkit: nil)
-    title = tag_list.present? ? "[##{id}] #{name} (#{tag_list.join(", ")})" : "[##{id}] #{name}"
-    r = {title: title, key: id, type: "Testcase", icon: priority}
+    title = tag_list.present? ? "#{name_with_id} (#{tag_list.join(", ")})" : "#{name_with_id}"
+    node = {
+      title: title,
+      key: id,
+      type: "Testcase",
+      icon: priority,
+      path: Rails.application.routes.url_helpers.project_testcase_path(project_id: self.project.identifier, id: self.id)
+    }
     if testkit and testkit.testcases.include?(self)
-      r.merge!(:selected => true)
+      node.merge!(:selected => true)
     end
     unless run_in_production
-      r.merge!(:extraClasses => 'critical')
+      node.merge!(:extraClasses => 'critical')
     end
-    r
+    node
   end
 
   def self.available_tags(options = {})

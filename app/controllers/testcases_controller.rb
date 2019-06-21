@@ -9,8 +9,40 @@ class TestcasesController < ApplicationController
   end
 
   def new
+    if params[:copy_from]
+      begin
+        @copy_from = Testcase.find(params[:copy_from])
+        @testcase = Testcase.new(@copy_from.attributes.except('id', 'created_at', 'updated_at', 'author_id', 'name'))
+        @testcase.name = "#{@copy_from.name} (#{l(:label_copied)}: #{@copy_from.name_with_id})"
+        @copy_from.steps.each do |step|
+          @testcase.steps << step.dup
+        end
+      rescue ActiveRecord::RecordNotFound
+        render_404
+        return
+      end
+    else
+      @testcase = Testcase.new(params_permit)
+      @testcase.steps.new
+    end
+  end
+
+  def create
     @testcase = Testcase.new(params_permit)
-    @testcase.steps.new
+    @testcase.author = User.current
+    @testcase.project = @project
+    @copy_from = Testcase.find(params[:copy_from]) if params[:copy_from]
+    if @copy_from && params[:copy_attachments].present?
+      @testcase.attachments = @copy_from.attachments.map do |attachement|
+        attachement.copy(:container => @testcase)
+      end
+    end
+    @testcase.save_attachments(params[:attachments])
+    if @testcase.save
+      redirect_to project_testcases_path, notice: "Создан новый тесткейс '#{link_to_testcase}' в '#{view_context.make_folders_legend(@testcase.folder)}'"
+    else
+      render :new
+    end
   end
 
   def preview
@@ -44,18 +76,6 @@ class TestcasesController < ApplicationController
     end
   end
 
-  def create
-    @testcase = Testcase.new(params_permit)
-    @testcase.author = User.current
-    @testcase.project = @project
-    @testcase.save_attachments(params[:attachments])
-    if @testcase.save
-      redirect_to project_testcases_path, notice: "Создан новый тесткейс '#{@testcase.name}' в '#{view_context.make_folders_legend(@testcase.folder)}'"
-    else
-      render :new
-    end
-  end
-
   def show
   end
 
@@ -65,7 +85,7 @@ class TestcasesController < ApplicationController
   def update
     @testcase.save_attachments(params[:attachments])
     if @testcase.update(params_permit)
-      redirect_to project_testcases_path, notice: "Тесткейс '#{@testcase.name}' обновлен"
+      redirect_to project_testcases_path, notice: "Тесткейс '#{link_to_testcase}' обновлен"
     else
       render :edit
     end
@@ -81,6 +101,10 @@ class TestcasesController < ApplicationController
   end
 
   private
+
+  def link_to_testcase
+    view_context.link_to @testcase.name_with_id, project_testcase_path(id: @testcase.id), :remote => true
+  end
 
   def find_testcase
     @testcase = Testcase.find(params[:id])
