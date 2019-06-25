@@ -1,8 +1,7 @@
 function dblclickShowTestcase(event) {
   var target = $(event.target);
   if (target.is('a')) {return;}
-  var span = target.parents('span').first();
-  if (!span.hasClass('fancytree-node')) {return;}
+  if (!target.is('.fancytree-title, .fancytree-custom-icon')) {return;}
   event.preventDefault();
   var node = $.ui.fancytree.getNode(event)
   if (node.data.type == "Testcase") {
