@@ -32,6 +32,7 @@ class Testcase < ActiveRecord::Base
   has_and_belongs_to_many :testkits
   belongs_to :project
   belongs_to :parent, :class_name => 'Testcase'
+  has_many :defects, :class_name => 'Issue', foreign_key: 'found_in_testcase_id'
 
   acts_as_attachable
   acts_as_taggable
@@ -110,7 +111,11 @@ class Testcase < ActiveRecord::Base
   end
 
   def name_with_id
-    "[##{id}] #{name}"
+    if parent
+      "[##{parent.id}] #{name.mb_chars.capitalize}"
+    else
+      "[##{id}] #{name.mb_chars.capitalize}"
+    end
   end
 
   def to_tree(testkit: nil)

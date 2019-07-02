@@ -1,0 +1,11 @@
+<%= form_for @project, :url => { :action => 'testkit_settings', :id => @project }, :method => :post do |f| %>
+  <%= hidden_field_tag :tab, 'testkit_settings' %>
+  <fieldset>
+    <legend><%= l(:text_select_project_new_defect_tracker) %></legend>
+    <%= fields_for 'project[testkit_settings_attributes]', @project.testkit_settings do |testkit_settings_fields| %>
+      <%= testkit_settings_fields.collection_select :new_defect_tracker_id, @project.trackers, :id, :name %></p>
+    <% end %>
+  </fieldset>
+  <%= submit_tag l(:button_save) %>
+<% end %>
+

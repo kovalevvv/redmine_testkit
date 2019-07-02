@@ -1,7 +1,7 @@
 <div class="box tabular">
   <p>
     <%= f.label :name %>
-    <%= f.text_field :name, style: "width: 77%;" %> <br />
+    <%= f.text_field :name, style: "width: 77%;", :value => controller.action_name == "new_run" ? "#{f.object.name} от #{format_time(Time.new)}" : f.object.name  %> <br />
   </p>
   <p>
     <%= f.label :description %>

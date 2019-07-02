@@ -2,6 +2,7 @@
 # See: http://guides.rubyonrails.org/routing.html
 
 resources :projects do
+  get '/issues/with_testcase/:testcase_id/new', to: 'issues#new', as: :new_issue_with_testcase
   resources :testkits do
     get 'tree', to: 'testkits#tree'
     get 'new_run', to: 'testkits#new_run'
@@ -21,6 +22,10 @@ resources :projects do
   get 'upload_file_to_step/:testcase_step_id', to: 'testcase_steps#upload_form', as: 'upload_file_to_step'
   match 'upload_file_to_step/:testcase_step_id', to: 'testcase_steps#upload', via: [:patch]
   delete 'destroy_step_attachment/:testcase_step_id/:id', to: 'testcase_steps#destroy', as: 'destroy_step_attachment'
+
+  member do
+    post 'testkit_settings'
+  end
 
   resources :testcases do 
     collection do

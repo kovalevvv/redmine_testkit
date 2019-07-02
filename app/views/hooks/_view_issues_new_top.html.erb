@@ -1,0 +1,6 @@
+<% if params[:testcase_id].present? && (testcase = Testcase.find(params[:testcase_id])) %>
+  <h3><%= l(:label_found_in_testcase) %> <%= link_to testcase.name_with_id, project_testcase_path(id: testcase.id), :remote => true %></h3>
+  <% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'redmine_testkit', :plugin => 'redmine_testkit' %>
+  <% end %>
+<% end %>

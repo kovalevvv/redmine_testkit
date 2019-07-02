@@ -6,10 +6,10 @@ class TestkitsController < ApplicationController
   helper :attachments
 
   def index
-    @runs = Testkit.where(done: false, run: true, project: @project).order(:created_at)
+    @runs = Testkit.where(done: false, run: true, project: @project).order(:created_at => :desc)
     @last_reports = Testkit.where(done: true, project: @project).order(:done_date => :desc).first(5)
     @reports_count = Testkit.where(done: true, project: @project).count
-    @templates = Testkit.where(active: true, run: false, project: @project).order(:name)
+    @templates = Testkit.where(active: true, run: false, project: @project).order(:updated_at => :desc)
   end
 
   def show_report

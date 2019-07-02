@@ -45,7 +45,18 @@
     </p>
   </div>
   <% @report.testcases.each_with_index do |testcase,i| %>
-    <h1><%= "#{i+1}. #{testcase.name.mb_chars.capitalize} ##{testcase.parent.id}" %></h1>
+    <h1><%= "#{i+1}. #{testcase.name_with_id}" %></h1>
+      <% if testcase.defects.present? %>
+        <p>Обнаружены дефекты: <br/> <%= testcase.defects.collect {|issue| link_to(issue, issue_path(issue)) }.join("<br/>").html_safe %></p>
+      <% end %>
+      <% if User.current.allowed_to?(:add_issues, @project) 
+        defect_params = { :testcase_id => testcase.id }
+        if @project.testkit_settings.present? && @project.testkit_settings.new_defect_tracker_id.present?
+          defect_params.merge!({:issue => {:tracker_id => @project.testkit_settings.new_defect_tracker_id }})
+        end
+        %>
+        <p><%= link_to l(:create_defect), project_new_issue_with_testcase_path(defect_params), :class => 'icon icon-add' %></p>
+      <% end %>
       <% if testcase.description.present? %>
         <p><%= textilizable testcase.description, :object => testcase %></p>
       <% end %>
@@ -71,16 +82,18 @@
                   <th>Статус</th>
                 </tr>
                 <tr align="left">
-                  <td width="49%"><%= textilizable step.if, :object => testcase %></td>
-                  <td width="49%"><%= textilizable step.then, :object => testcase %></td>
+                  <td width="49%"><%= textilizable step.if, :object => testcase, :attachments => testcase.attachments, :object => testcase %></td>
+                  <td width="49%"><%= textilizable step.then, :object => testcase, :attachments => testcase.attachments, :object => testcase %></td>
                   <td width="4%" class="<%= step.status %>_style"><%= step.status %></td>
                 </tr>
-                <tr>
-                  <th colspan="3" align="left">Результат</th>
-                </tr>
-                <tr>
-                  <td colspan="3" align="center"><%= step.result %></td>
-                </tr>
+                <% if step.result.present? %>
+                  <tr>
+                    <th colspan="3" align="left">Результат</th>
+                  </tr>
+                  <tr>
+                    <td colspan="3" align="left"><%= step.result %></td>
+                  </tr>
+                <% end %>
                 <% if step.attachments.present? %>
                   <tr>
                     <th colspan="3" align="left">Файлы к шагу</th>

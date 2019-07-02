@@ -1,4 +1,8 @@
 ru:
+  label_testkit_settings: Тестирование
+  text_select_project_new_defect_tracker: Трекер для обнаруженных дефектов
+  label_found_in_testcase: Обнаружено в ходе тестирования сценария
+  create_defect: Создать дефект
   label_testkit: Тестирование
   label_testkits: Лаборатория тестирования
   label_testcases: Тестовые сценарии

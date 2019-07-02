@@ -17,14 +17,25 @@
       <li><b><%= t(:field_priority) %>:</b> <%= t('select_priority_'+@testcase.priority) %></li>
       <li><b><%= t(:field_duration) %>:</b> <%= distance_of_time_in_words(0, @testcase.duration.minutes) %></li>
       <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
-      <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
-      <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
+      <% unless @testcase.run %>
+        <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>
+        <li><b>Статистика:</b> <%= @testcase.statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %></li>
+      <% end %>
+      <% if @testcase.defects.present? %>
+       <li><b>Обнаружены дефекты:</b><br/> <%= @testcase.defects.collect {|issue| link_to(issue, issue_path(issue)) }.join("<br/>").html_safe %></li>
+      <% end %>
       <li><b>Описание:</b> <%= textilizable @testcase.description, :attachments => @attachments, :object => @testcase %></li>
       <% if @testcase.attachments.present? %>
         <li><b>Файлы:</b></li>
         <%= link_to_attachments @testcase, :thumbnails => false %>
       <% end %>
     </ul>
+  <% if @testcase.testkits.report.present? %>
+    <p><strong>Сценарий в отчете тестирования:</strong></p>
+    <div>
+      <%= render :partial => 'testkits/table_reports', locals: { reports: @testcase.testkits.report } %>
+    </div>
+  <% end %>
   </div>
   
   <table class="list">
@@ -32,16 +43,47 @@
      <th>#</th>
      <th>Шаг</th>
      <th>Ожидаемый результат</th>
-     <th>Дополнительные данные</th>
+     <%= "<th>Дополнительные данные</th>".html_safe unless @testcase.run %>
+     <%= "<th>Статус</th>".html_safe if @testcase.run %>
    </thead>
   <% @testcase.steps.each_with_index do |step,i| %>
     <tr>
-      <td align="center"><%= i+1 %></td>
+      <% 
+      rowspan = 1
+      rowspan = rowspan + 2 if @testcase.run && step.result.present?
+      rowspan = rowspan + 2 if step.attachments.present?
+      -%>
+      <td align="center"<%= " rowspan=#{rowspan}" if rowspan > 1 %>><%= i+1 %></td>
       <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.if, :attachments => @attachments, :object => @testcase %></td>
       <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
-      <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :attachments => @attachments, :object => @testcase %></td>
+      <% unless @testcase.run %>
+        <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :attachments => @attachments, :object => @testcase %></td>
+      <% end %>
+      <% if @testcase.run %>
+        <td align="center" valign="top" class="<%= step.status %>_style"<%= " rowspan=#{rowspan}" if rowspan > 1 %>><%= step.status %></td>
+      <% end %>
     </tr>
+    <% if @testcase.run && step.result.present? %>
+      <tr>
+        <th colspan="2" align="left">Результат</th>
+      </tr>
+      <tr>
+        <td colspan="2" align="center"><%= step.result %></td>
+      </tr>
+    <% end %>
+    <% if step.attachments.present? %>
+      <tr>
+        <th colspan="2" align="left">Файлы к шагу</th>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div id="step_<%= step.id %>"><%= render :partial => 'testcase_steps/step', 
+          :locals => { step: step, attachments: step.attachments,
+            options: { editable: false, deletable: false, author: true },
+            thumbnails: Setting.thumbnails_enabled? } %></div>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
   </table>
-
 </div>

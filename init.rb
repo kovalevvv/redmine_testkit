@@ -4,6 +4,9 @@ Rails.application.config.to_prepare do
   unless Issue.include?(RedmineTestkit::IssuePatch)
     Issue.send(:include, RedmineTestkit::IssuePatch)
     Version.send(:include, RedmineTestkit::VersionPatch)
+    Project.send(:include, RedmineTestkit::ProjectPatch)
+    ProjectsHelper.send(:include, RedmineTestkit::ProjectsHelperPatch)
+    ProjectsController.send(:include, RedmineTestkit::ProjectsControllerPatch)
     AutoCompletesController.send(:include, RedmineTestkit::AutoCompletesControllerPatch)
   end
 end
@@ -34,6 +37,7 @@ Redmine::Plugin.register :redmine_testkit do
     permission :delete_testcases, :testcases => :destroy
     permission :manage_archive, :testkits => [:index_archive, :destroy, :new_from_archive, :move_from_archive]
     permission :delete_runs, :testkits => :destroy
+    permission :manage_testkit_settings, :projects => :testkit_settings, :require => :member
   end
 
   menu :project_menu, :testkit, { :controller => 'testkits', :action => 'index' }, :caption => :label_testkit, :after => :board, :param => :project_id

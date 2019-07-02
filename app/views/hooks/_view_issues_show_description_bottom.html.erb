@@ -1,5 +1,13 @@
-<% if issue.testkits.present? %>
+<% if issue.testkits.present? || issue.found_in_testcase.present? %>
   <hr />
+  <% if issue.found_in_testcase.present? %>
+  <p>
+    <strong>
+      <%= l(:label_found_in_testcase) %>
+      <%= link_to issue.found_in_testcase.parent.name_with_id, project_testcase_path(id: issue.found_in_testcase.id, project_id: issue.project.identifier), :remote => true %>
+    </strong>
+  </p>
+  <% end %>
   <% if issue.testkits.run.present? %>
   <p><strong>Тест-планы для выполнения</strong></p>
   <div>
@@ -12,7 +20,7 @@
     <%= render :partial => 'testkits/table_reports', locals: { reports: issue.testkits.report } %>
   </div>
   <% end %>
-<% end %>
-<% content_for :header_tags do %>
-  <%= stylesheet_link_tag 'redmine_testkit', :plugin => 'redmine_testkit' %>
+  <% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'redmine_testkit', :plugin => 'redmine_testkit' %>
+  <% end %>
 <% end %>
