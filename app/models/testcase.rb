@@ -112,9 +112,9 @@ class Testcase < ActiveRecord::Base
 
   def name_with_id
     if parent
-      "[##{parent.id}] #{name.mb_chars.capitalize}"
+      "[##{parent.id}] #{name.mb_chars.humanize}"
     else
-      "[##{id}] #{name.mb_chars.capitalize}"
+      "[##{id}] #{name.mb_chars.humanize}"
     end
   end
 
