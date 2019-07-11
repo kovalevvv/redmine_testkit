@@ -1,6 +1,7 @@
 ru:
   label_testkit_settings: Тестирование
-  text_select_project_new_defect_tracker: Трекер для обнаруженных дефектов
+  legend_select_project_new_defect_tracker: Трекер для обнаруженных дефектов
+  legend_testcase_prefix: Префикс для тест-кейсов
   label_found_in_testcase: Обнаружено в ходе тестирования сценария
   create_defect: Создать дефект
   label_testkit: Тестирование

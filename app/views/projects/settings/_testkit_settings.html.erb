@@ -1,11 +1,15 @@
 <%= form_for @project, :url => { :action => 'testkit_settings', :id => @project }, :method => :post do |f| %>
   <%= hidden_field_tag :tab, 'testkit_settings' %>
-  <fieldset>
-    <legend><%= l(:text_select_project_new_defect_tracker) %></legend>
-    <%= fields_for 'project[testkit_settings_attributes]', @project.testkit_settings do |testkit_settings_fields| %>
-      <%= testkit_settings_fields.collection_select :new_defect_tracker_id, @project.trackers, :id, :name %></p>
-    <% end %>
-  </fieldset>
-  <%= submit_tag l(:button_save) %>
+  <%= fields_for 'project[testkit_settings_attributes]', @project.testkit_settings do |testkit_settings_fields| %>
+    <fieldset>
+      <legend><%= l(:legend_select_project_new_defect_tracker) %></legend>
+        <p><%= testkit_settings_fields.collection_select :new_defect_tracker_id, @project.trackers, :id, :name %></p>
+    </fieldset>
+    <fieldset>
+      <legend><%= l(:legend_testcase_prefix) %></legend>
+      <p><%= testkit_settings_fields.text_field :testcase_prefix, :placeholder => 'TC' %></p>
+    </fieldset>
+  <% end %>
+  <p><%= submit_tag l(:button_save) %></p>
 <% end %>
 

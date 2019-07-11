@@ -6,7 +6,7 @@ module RedmineTestkit
 
     module InstanceMethods
       def testkit_settings
-        @project.update(params.require(:project).permit(testkit_settings_attributes: :new_defect_tracker_id))
+        @project.update(params.require(:project).permit(testkit_settings_attributes: [:new_defect_tracker_id, :testcase_prefix]))
         flash[:notice] = l(:notice_successful_update)
         redirect_to settings_project_path(@project, :tab => 'testkit_settings')
       end

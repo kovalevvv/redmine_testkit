@@ -11,7 +11,7 @@ class TestcaseValidator < ActiveModel::Validator
     context = {
           project: 'test',
           report: testkit.as_json
-        }.merge!(:testcases => [record.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc]})])
+        }.merge!(:testcases => [record.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc, :name_with_id]})])
 
     begin
       template.render_to_string(context)
@@ -112,9 +112,9 @@ class Testcase < ActiveRecord::Base
 
   def name_with_id
     if parent
-      "[##{parent.id}] #{name.mb_chars.humanize}"
+      "[#{project.testkit_settings && project.testkit_settings.testcase_prefix.present? ? project.testkit_settings.testcase_prefix : "TC"}#{parent.id}] #{name.mb_chars.humanize}"
     else
-      "[##{id}] #{name.mb_chars.humanize}"
+      "[#{project.testkit_settings && project.testkit_settings.testcase_prefix.present? ? project.testkit_settings.testcase_prefix : "TC"}#{id}] #{name.mb_chars.humanize}"
     end
   end
 

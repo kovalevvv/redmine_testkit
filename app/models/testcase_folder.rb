@@ -13,7 +13,7 @@ class TestcaseFolder < ActiveRecord::Base
     else
       children << folder.testcases.not_run.order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     end
-    out = {title: "#{paragraph}. [##{folder.id}] #{folder.name} (#{I18n.t :testcase, count: folder.testcases.not_run.count})", key: folder.id, type: "TestcaseFolder", folder: true}
+    out = {title: "#{paragraph}. [F#{folder.id}] #{folder.name} (#{I18n.t :testcase, count: folder.testcases.not_run.count})", key: folder.id, type: "TestcaseFolder", folder: true}
     out.merge!({children: children.flatten}) if children
     out.merge!({expanded: true}) if expanded
     [out]
