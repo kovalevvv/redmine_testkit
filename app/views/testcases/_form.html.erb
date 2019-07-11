@@ -1,15 +1,11 @@
 <div class="box tabular">
 <%= hidden_field_tag 'copy_from', params[:copy_from] if params[:copy_from] %>
-<% if @testcase.folder_id and not action_name == "edit" %>
-  <p><%= f.hidden_field :folder_id %></p>
-<% else %>
 <p>
   <%= f.label :folder_id do |label| %>
     <%= (label.translation + ' <span class="required"> *</span>').html_safe %>
   <% end %>
   <%= f.collection_select :folder_id, TestcaseFolder.where(project: @project), :id, :text_method, include_blank: @testcase.new_record? ? true : false %>
 </p>
-<% end %>
 <p>
 <%= f.label :name do |label| %>
   <%= (label.translation + ' <span class="required"> *</span>').html_safe %>

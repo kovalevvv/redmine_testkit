@@ -56,7 +56,7 @@ class TestcasesController < ApplicationController
 
   def import
     if params[:import_file].present?
-      @testcase = Testcase.new(:name => params[:import_file].original_filename)
+      @testcase = Testcase.new(:name => params[:import_file].original_filename, :folder_id => params[:current_folder])
       
       begin
         csv = CSV.read(params[:import_file].path)

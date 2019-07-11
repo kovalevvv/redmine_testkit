@@ -9,5 +9,10 @@
 </div>
 <%= form_tag(import_project_testcases_path, multipart: true) do -%>
   <div><%= file_field_tag :import_file, accept: '.csv' %></div>
+  <%= hidden_field_tag 'current_folder' %>
   <div><%= submit_tag l(:button_submit) %></div>
 <% end -%>
+
+<%= javascript_tag do %>
+  $('#current_folder').val($('#testcase_folder_id').val())
+<% end %>
