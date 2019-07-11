@@ -72,7 +72,11 @@
 <%= link_to_attachments (@copy_from && @copy_from.attachments.any?) ? @copy_from : @testcase, :thumbnails => false %>
 </div>
 
-<p><%= f.submit l(:button_save), disabled: true %>&nbsp;<%= link_to l(:button_cancel), :back %></p>
+<p>
+  <%= f.submit l(:button_save), disabled: true %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>
+  &nbsp;<%= link_to l(:button_cancel), :back %>
+</p>
 
 <%= f.fields_for :steps do |builder| %>
   <%= link_to_add_step l(:label_add_step), f, :steps %>
@@ -83,7 +87,11 @@
 <% end %>
 <%= link_to_add_step l(:label_add_step), f, :steps %>
 
-<p><%= f.submit l(:button_save), disabled: true %>&nbsp;<%= link_to l(:button_cancel), :back %></p>
+<p>
+  <%= f.submit l(:button_save), disabled: true %>
+  <%= submit_tag l(:button_create_and_continue), :name => 'continue' %>
+  &nbsp;<%= link_to l(:button_cancel), :back %>
+</p>
 
 <% content_for :header_tags do %>
 

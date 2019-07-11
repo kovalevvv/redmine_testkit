@@ -39,7 +39,18 @@ class TestcasesController < ApplicationController
     end
     @testcase.save_attachments(params[:attachments])
     if @testcase.save
-      redirect_to project_testcases_path, notice: "Создан новый тесткейс '#{link_to_testcase}' в '#{view_context.make_folders_legend(@testcase.folder)}'"
+      notice = "Создан новый тесткейс '#{link_to_testcase}' в '#{view_context.make_folders_legend(@testcase.folder)}'"
+      if params[:continue]
+        redirect_to new_project_testcase_path(:testcase => 
+          {
+            :folder_id => @testcase.folder_id,
+            :run_in_production => @testcase.run_in_production,
+            :priority => @testcase.priority,
+            :tag_list => @testcase.tag_list 
+          }), :notice => notice
+      else
+        redirect_to project_testcases_path, :notice => notice
+      end
     else
       render :new
     end
