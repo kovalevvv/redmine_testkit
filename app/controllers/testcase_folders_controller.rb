@@ -7,10 +7,12 @@ class TestcaseFoldersController < ApplicationController
     json = []
     TestcaseFolder.where(parent_id: nil, project: @project).order(:name).each_with_index do |folder,index|
       if params[:q].present? and params[:q].is_a? Array
-        json << folder.make_tree(tags: params[:q], paragraph: (index+1).to_s)
+        args = {tags: params[:q], paragraph: (index+1).to_s}
       else
-        json << folder.make_tree(paragraph: (index+1).to_s)
+        args = {paragraph: (index+1).to_s}
       end
+      args.merge!({expanded: true}) if params[:expanded]
+      json << folder.make_tree(args)
     end
     render json: json.flatten
   end

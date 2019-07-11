@@ -5,18 +5,17 @@ class TestcaseFolder < ActiveRecord::Base
   belongs_to :project
   validates :name, :presence => true
 
-  def make_tree(folder=self, testkit: nil, tags: nil, paragraph: "")
+  def make_tree(folder=self, testkit: nil, tags: nil, paragraph: "", expanded: false)
     children = []
-    children << folder.children.each_with_index.collect { |folder, index| make_tree(folder, testkit: testkit, tags: tags, paragraph: paragraph + '.' + (index+1).to_s) } if folder.children.present?
+    children << folder.children.each_with_index.collect { |folder, index| make_tree(folder, testkit: testkit, tags: tags, paragraph: paragraph + '.' + (index+1).to_s, expanded: expanded) } if folder.children.present?
     if tags
       children << folder.testcases.not_run.tagged_with(tags).order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     else
       children << folder.testcases.not_run.order(:created_at).collect { |t| t.to_tree :testkit => testkit } if folder.testcases.not_run.present?
     end
     out = {title: "#{paragraph}. [##{folder.id}] #{folder.name} (#{I18n.t :testcase, count: folder.testcases.not_run.count})", key: folder.id, type: "TestcaseFolder", folder: true}
-    if children
-      out.merge!({expanded: true, children: children.flatten})
-    end
+    out.merge!({children: children.flatten}) if children
+    out.merge!({expanded: true}) if expanded
     [out]
   end
 

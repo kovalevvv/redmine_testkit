@@ -116,7 +116,7 @@ class Testkit < ActiveRecord::Base
   def tree
     out = []
     TestcaseFolder.where(parent_id: nil, project: project).order(:name).each_with_index do |folder,index|
-      out << folder.make_tree(:testkit => self, paragraph: (index+1).to_s)
+      out << folder.make_tree(testkit: self, paragraph: (index+1).to_s, expanded: true)
     end
     out
   end

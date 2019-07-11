@@ -33,7 +33,7 @@ $(function() {
   $('#testcases').fancytree({
   <% case action_name %>
     <% when 'new' %>
-    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
+    source: { url: "<%= tree_project_testcase_folders_path(:expanded => true) %>", dataType: "json" },
     <% when 'edit' %>
     source: { url: "<%= project_testkit_tree_path(:testkit_id => @testkit.id) %>", dataType: "json" },
     <% when 'new_from_archive' %>

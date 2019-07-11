@@ -61,6 +61,7 @@ function updateTree() {
 <%= javascript_tag do %>
 $(function() {
   $('#testcases').fancytree({
+    extensions: ["persist"],
     source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" }
   })
 })
