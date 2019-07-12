@@ -9,7 +9,7 @@ class StripTagsForTestcases < ActiveRecord::Migration
         step.info = strip_tags(step.info)
       end
       testcase.save(validate: false)
-      puts testcase.id
+      print "#{testcase.id} "
     end
   end
 end
