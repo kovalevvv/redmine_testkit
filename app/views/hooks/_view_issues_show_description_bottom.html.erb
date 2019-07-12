@@ -1,10 +1,20 @@
-<% if issue.testkits.present? || issue.found_in_testcase.present? %>
+<% if issue.testkits.present? || issue.found_in_testcase.present? || issue.testcase.present? || User.current.allowed_to?(:add_and_edit_testcases, @project) %>
   <hr />
+  <% if issue.testcase.present? %>
+  <p>
+    <strong>
+      <%= l(:label_created_testcase) %>:
+      <%= link_to issue.testcase.name_with_id, project_testcase_path(id: issue.testcase.id, project_id: issue.project.identifier, buttons: true), :remote => true %>
+    </strong>
+  </p>
+  <% else %>
+    <%= link_to l(:label_new_testcase), new_project_testcase_path(project_id: issue.project.identifier, :testcase => { issue_id: issue.id }), :class => 'icon icon-add' %>
+  <% end %>
   <% if issue.found_in_testcase.present? %>
   <p>
     <strong>
-      <%= l(:label_found_in_testcase) %>
-      <%= link_to issue.found_in_testcase.parent.name_with_id, project_testcase_path(id: issue.found_in_testcase.id, project_id: issue.project.identifier), :remote => true %>
+      <%= l(:label_found_in_testcase) %>:
+      <%= link_to issue.found_in_testcase.name_with_id, project_testcase_path(id: issue.found_in_testcase.id, project_id: issue.project.identifier), :remote => true %>
     </strong>
   </p>
   <% end %>

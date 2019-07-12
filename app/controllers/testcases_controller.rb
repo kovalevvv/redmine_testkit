@@ -114,7 +114,7 @@ class TestcasesController < ApplicationController
   private
 
   def link_to_testcase
-    view_context.link_to @testcase.name_with_id, project_testcase_path(id: @testcase.id), :remote => true
+    view_context.link_to @testcase.name_with_id, project_testcase_path(id: @testcase.id, buttons: true), :remote => true
   end
 
   def find_testcase

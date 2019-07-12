@@ -27,6 +27,9 @@
 <p>
 <%= f.label :duration %> <%= f.text_field :duration, style: "width: 50px" %> минут
 </p>
+<p>
+<%= f.label :issue %> <%= f.text_field :issue_id, { style: "width: 50px", :class => "relation_issue_field" } %>
+</p>
 <p style="width: 800px;">
 <%= f.label :tag_list %> <%= f.text_field :tag_list, value: f.object.tag_list.to_s %> <br />
 <%= stylesheet_link_tag 'jquery.tagit.css', plugin: 'redmine_testkit' %>
@@ -151,10 +154,23 @@ function backToEdit(e) {
   preview_link.removeClass('selected')
 }
 
+function observeAutocompleteFieldTestkit(element) {
+  $(document).ready(function() {
+    element.autocomplete($.extend({
+      source: <%= "'#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => Setting.cross_project_subtasks)}'".html_safe %>,
+      minLength: 2,
+      search: function(){$('#ajax-indicator').show();},
+      response: function(){$('#ajax-indicator').hide();}
+    }));
+    element.addClass('autocomplete');
+  });
+}
+
 $(document).ready(function() {
     $('input[type=submit]').each(function () {
       $(this).attr('disabled', false)
     })
+    observeAutocompleteFieldTestkit($('.relation_issue_field'));
 });
 
 <% end -%>
@@ -162,3 +178,5 @@ $(document).ready(function() {
 <% end %>
 
 <%= javascript_tag render 'script' %>
+
+

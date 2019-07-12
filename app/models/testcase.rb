@@ -25,6 +25,7 @@ end
 class Testcase < ActiveRecord::Base
   belongs_to :author, :class_name => 'User'
   belongs_to :folder, :class_name => 'TestcaseFolder', foreign_key: "folder_id"
+  belongs_to :issue
 
   has_many :steps, -> { order(:position) }, class_name: "TestcaseStep", dependent: :destroy
   accepts_nested_attributes_for :steps, allow_destroy: true
@@ -44,6 +45,7 @@ class Testcase < ActiveRecord::Base
 
   validates :folder_id, :name, :description, presence: true, unless: :run
   validates_with TestcaseValidator
+  validates :issue_id, uniqueness: true
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
   TESTCASE_PRIORITIES = %w(low normal critical)

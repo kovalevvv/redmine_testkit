@@ -4,7 +4,7 @@
   <div class="contextual" style="text-align: right;">
   <%= link_to 'Редактировать', edit_project_testcase_path(id: @testcase.id), :class => 'icon icon-edit' if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
   <%= link_to 'Копировать', copy_project_testcases_path(copy_from: @testcase.id), :class => 'icon icon-copy' if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
-  <%= link_to 'Удалить', project_testcase_path(id: @testcase.id), :method => :delete, :class => 'icon icon-del' unless @testcase.testkits.present? || Testcase.where(parent_id: @testcase.id).present? || !User.current.allowed_to?(:delete_testcases, @project) %>
+  <%= link_to 'Удалить', project_testcase_path(id: @testcase.id), :method => :delete, :class => 'icon icon-del', data: { confirm: l(:text_are_you_sure) } unless @testcase.testkits.present? || Testcase.where(parent_id: @testcase.id).present? || !User.current.allowed_to?(:delete_testcases, @project) %>
   </div>
   <% end %>
   <h2><%= make_folders_legend(@testcase.folder, first: false) + @testcase.name_with_id %></h2>
@@ -16,6 +16,7 @@
       <li><b><%= t(:field_run_in_production) %>:</b> <%= @testcase.run_in_production ? t(:select_yes) : t(:select_no) %></li>
       <li><b><%= t(:field_priority) %>:</b> <%= t('select_priority_'+@testcase.priority) %></li>
       <li><b><%= t(:field_duration) %>:</b> <%= distance_of_time_in_words(0, @testcase.duration.minutes) %></li>
+      <li><b><%= l(:label_issue) %>:</b> <%= link_to(@testcase.issue, @testcase.issue) %></li>
       <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
       <% unless @testcase.run %>
         <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>

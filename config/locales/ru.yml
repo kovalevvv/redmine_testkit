@@ -1,4 +1,6 @@
 ru:
+  label_new_testcase: Создать тест-кейс
+  label_created_testcase: Создан тест-кейс
   label_testkit_settings: Тестирование
   legend_select_project_new_defect_tracker: Трекер для обнаруженных дефектов
   legend_testcase_prefix: Префикс для тест-кейсов
