@@ -1,4 +1,17 @@
 ru:
+  label_not_tested: Тестирование не проводилось
+  button_restore: Восстановить
+  confirm_restore: План тестирования будет перемещен
+  button_new_from_template: Создать новый план тестирования по шаблону
+  confirm_delete_run: Вы точно ходите удалить тестирование?
+  button_go_to_run: Начать тестирование
+  label_cannot_test_this_script: Вы не можете тестировать этот сценарий
+  label_ps: План тестирования
+  label_pmi: Протокол и методика испытаний
+  confirm_template_will_be_deleted: Шаблон будет удален
+  confirm_move_to_arhive: Шаблон будет перемещен в архив
+  button_run: Запустить тестирование
+  button_move_to_arhive: Переместить в архив
   label_new_testcase: Создать тест-кейс
   label_created_testcase: Создан тест-кейс
   label_testkit_settings: Тестирование

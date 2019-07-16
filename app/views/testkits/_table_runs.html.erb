@@ -29,13 +29,13 @@
         <td align="center"><%= run.issues.collect {|i| link_to("##{i.id}", i) }.join(', ').html_safe %></td>
         <td align="center"><%= run.versions.collect {|v| link_to(v.name,v) }.join.html_safe %></td>
         <% if User.current.allowed_to?(:pass_runs, @project) %>
-          <td align="center"><%= User.current == run.assigned_to ? link_to('', project_testkit_pass_run_path(testkit_id: run.id, project_id: @project.identifier), :class => 'icon icon-test') : link_to('', '#', :class => 'icon', :style => 'background-image: url(/images/false.png);')  -%></td>
+          <td align="center"><%= User.current == run.assigned_to ? link_to('', project_testkit_pass_run_path(testkit_id: run.id, project_id: @project.identifier), :class => 'icon icon-test', :title => t(:button_go_to_run)) : link_to('', '#', :class => 'icon', :style => 'background-image: url(/images/false.png);', :title => t(:label_cannot_test_this_script))  -%></td>
         <% end %>
-        <td align="center"><%= link_to '', project_testkit_edit_run_path(testkit_id: run.id, project_id: @project.identifier), :class => 'icon icon-edit' -%></td>
+        <td align="center"><%= link_to '', project_testkit_edit_run_path(testkit_id: run.id, project_id: @project.identifier), :class => 'icon icon-edit', :title => t(:button_edit) -%></td>
         <% if User.current.allowed_to?(:delete_runs, @project) %>
-          <td align="center"><%= link_to '', project_testkit_path(id: run.id, project_id: @project.identifier), :method => :delete, :class => 'icon icon-del', data: { confirm: "Вы точно ходите удалить тестирование?" } -%></td>
+          <td align="center"><%= link_to '', project_testkit_path(id: run.id, project_id: @project.identifier), :method => :delete, :class => 'icon icon-del', :title => t(:button_delete), data: { confirm: t(:confirm_delete_run) } -%></td>
         <% end %>
-        <td align="center"><%= link_to 'ПМИ', project_testkit_export_path(project_id: @project.identifier, testkit_id: run.id, type: 'pmi'), :class => 'icon icon-report' -%></td>
+        <td align="center"><%= link_to 'ПМИ', project_testkit_export_path(project_id: @project.identifier, testkit_id: run.id, type: 'pmi'), :class => 'icon icon-report', :title => t(:label_pmi) -%></td>
       </tr>
     <% end %>
   <% else %>

@@ -33,21 +33,21 @@
           <% if testkit.templates_done > 0 %>
             <%= testkit.template_statistics.collect {|k,v| content_tag(:span, k, :class => k+'_style') + ":#{v}" }.join(', ').html_safe %>, количество запусков: <%= testkit.templates_done %></td>
           <% else %>
-            Тестирование не проводилось
+            <%= t(:label_not_tested) %>
           <% end %>
         <td align="center"><%= testkit.issues.collect {|i| link_to("##{i.id}", i) }.join(', ').html_safe %></td>
         <td align="center"><%= testkit.versions.collect {|v| link_to(v.name,v) }.join.html_safe %></td>
         <% if User.current.allowed_to?(:create_and_edit_testkits, @project) %>
           <% if User.current.allowed_to?(:create_and_edit_runs, @project) %>
-            <td><%= link_to '', project_testkit_new_run_path(testkit_id: testkit.id), :class => 'icon testkit-run', :title => 'запустить тестирование' -%></td>
+            <td><%= link_to '', project_testkit_new_run_path(testkit_id: testkit.id), :class => 'icon testkit-run', :title => t(:button_run) -%></td>
           <% end %>
-          <td><%= link_to '', edit_project_testkit_path(id: testkit.id), :class => 'icon icon-edit', :title => 'редактировать' -%></td>
+          <td><%= link_to '', edit_project_testkit_path(id: testkit.id), :class => 'icon icon-edit', :title => t(:button_edit) -%></td>
           <% if User.current.allowed_to?(:manage_archive, @project) %>
             <td><%= link_to '', project_testkit_path(id: testkit.id),
              :method => :delete,
              :class => testkit.have_runs? ? 'icon testkit-move' : 'icon icon-del',
-             :title => testkit.have_runs? ? 'переместить в архив' : 'удалить',
-             :data => { confirm: testkit.have_runs? ? "Шаблон будет перемещен в архив" : "Шаблон будет удален" } -%></td>
+             :title => testkit.have_runs? ? t(:button_move_to_arhive) : t(:button_delete),
+             :data => { confirm: testkit.have_runs? ? t(:confirm_move_to_arhive) : t(:confirm_template_will_be_deleted) } -%></td>
           <% end %>
         <% end %>
       </tr>
