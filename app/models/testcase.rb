@@ -45,7 +45,7 @@ class Testcase < ActiveRecord::Base
 
   validates :folder_id, :name, :description, presence: true, unless: :run
   validates_with TestcaseValidator
-  validates_uniqueness_of :issue_id, :allow_blank => true, :allow_nil => true, unless: :run
+  validates_uniqueness_of :issue_id, :allow_blank => true, :allow_nil => true, scope: :run, unless: :run
   validate :ensure_issue_exists, unless: :run
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
