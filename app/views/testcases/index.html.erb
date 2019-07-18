@@ -56,6 +56,7 @@ function updateTree() {
 <% end %>
 <%= form_tag({}) do -%>
 <div id="testcases" style="max-width: 1800px;" class="content">
+<div style="position: relative; float:right;"><%= link_to " ", "#", id: "x_expander", onclick: "f_expander(this)",  style: "background-image: url(/images/bullet_toggle_plus.png); padding-left: 13px;" %></div>
 </div>
 <% end %>
 <%= javascript_tag do %>
@@ -68,6 +69,25 @@ $(function() {
 <% end %>
 
 <%= javascript_tag do %>
+  var current_expand = false
+  function f_expander(e) {
+    if (current_expand) {
+      current_expand = false
+      $(e).css('background-image', 'url(/images/bullet_toggle_plus.png)')
+      tree = $("#testcases").fancytree("getTree")
+      tree.visit(function(node){
+        node.setExpanded(current_expand)
+      })
+    } else {
+      current_expand = true
+      $(e).css('background-image', 'url(/images/bullet_toggle_minus.png)')
+      tree = $("#testcases").fancytree("getTree")
+      tree.visit(function(node){
+        node.setExpanded(current_expand)
+      })
+    }
+  }
+
   $(function() { contextMenuInit('<%= node_menu_project_testcase_folders_path %>') })
   $(function() { $.elevator(); })
   $(function() { $(document).dblclick({buttons: true}, dblclickShowTestcase) })

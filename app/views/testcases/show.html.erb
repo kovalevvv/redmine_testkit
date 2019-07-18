@@ -16,7 +16,7 @@
       <li><b><%= t(:field_run_in_production) %>:</b> <%= @testcase.run_in_production ? t(:select_yes) : t(:select_no) %></li>
       <li><b><%= t(:field_priority) %>:</b> <%= t('select_priority_'+@testcase.priority) %></li>
       <li><b><%= t(:field_duration) %>:</b> <%= distance_of_time_in_words(0, @testcase.duration.minutes) %></li>
-      <li><b><%= l(:label_issue) %>:</b> <%= link_to(@testcase.issue, @testcase.issue) %></li>
+      <li><b><%= l(:label_issue) %>:</b> <%= link_to(@testcase.issue, @testcase.issue) if @testcase.issue.present? %></li>
       <li><b><%= t(:field_tag_list) %>:</b> <%= @testcase.tag_list.to_s %></li>
       <% unless @testcase.run %>
         <li><b>Количество тестов:</b> <%= @testcase.run_count %></li>

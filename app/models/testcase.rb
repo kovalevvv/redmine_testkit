@@ -45,13 +45,20 @@ class Testcase < ActiveRecord::Base
 
   validates :folder_id, :name, :description, presence: true, unless: :run
   validates_with TestcaseValidator
-  validates :issue_id, uniqueness: true
+  validates_uniqueness_of :issue_id, :allow_blank => true, :allow_nil => true, unless: :run
+  validate :ensure_issue_exists, unless: :run
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
   TESTCASE_PRIORITIES = %w(low normal critical)
 
   include ActionView::Helpers::DateHelper
   include AttachmentPatch if defined?(AttachmentPatch) == 'constant' && AttachmentPatch.class == Module  
+
+  def ensure_issue_exists
+    if self.issue_id.present?
+      errors.add(:issue) unless Issue.find_by_id(self.issue_id)
+    end
+  end
 
   def duration_text
     distance_of_time_in_words(0, duration.minutes)
