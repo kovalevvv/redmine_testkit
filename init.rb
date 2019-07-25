@@ -1,4 +1,4 @@
-require_dependency 'hook'
+require_dependency 'redmine_testkit'
 
 Rails.application.config.to_prepare do
   unless Issue.include?(RedmineTestkit::IssuePatch)
