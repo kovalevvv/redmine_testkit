@@ -45,7 +45,7 @@ class Testcase < ActiveRecord::Base
 
   validates :folder_id, :name, :description, presence: true, unless: :run
   validates_with TestcaseValidator
-  validates_uniqueness_of :issue_id, :allow_blank => true, :allow_nil => true, scope: :run, unless: :run
+  validates_uniqueness_of :issue_id, :allow_blank => true, :allow_nil => true, scope: :run, unless: :run, message: :attached_to_another_task
   validate :ensure_issue_exists, unless: :run
 
   TESTCASE_STATUSES = %w(pass fail blocked not_run)
@@ -74,7 +74,10 @@ class Testcase < ActiveRecord::Base
       node.replace new_node
     end
     n.css('a.wiki-anchor').remove
-    n.css('a').remove {|node| node.attribute('name').present? }
+    n.css('a').each do |node|
+      node['style'] = 'color: #5B9BD5; text-decoration: underline'
+      node.remove if node.has_attribute?('name')
+    end
     n.css('blockquote').reverse.each {|node| node.replace node.inner_html }
     n.css('pre').each {|node| node.replace node.inner_html }
     n.to_html

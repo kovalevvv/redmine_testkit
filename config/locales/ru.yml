@@ -67,3 +67,10 @@ ru:
     few:   "Всего %{count} отчета"
     many:  "Всего %{count} отчетов"
     other: "Всего %{count} отчетов"
+  activerecord:
+    errors:
+      models:
+        testcase:
+          attributes:
+            issue_id:
+              attached_to_another_task: уже связана с другим тест-кейсом

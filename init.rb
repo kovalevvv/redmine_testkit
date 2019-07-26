@@ -12,7 +12,7 @@ Rails.application.config.to_prepare do
 end
 
 Sablon.configure do |config|
-  config.register_html_tag(:del, :inline, properties: { highlight: 'cyan' })
+  config.register_html_tag(:del, :inline, properties: { :'text-decoration' => 'strike' })
   config.register_html_tag(:code, :inline, properties: { highlight: 'yellow' })
 end
 
