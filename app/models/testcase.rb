@@ -139,12 +139,9 @@ class Testcase < ActiveRecord::Base
       icon: priority,
       path: Rails.application.routes.url_helpers.project_testcase_path(project_id: self.project.identifier, id: self.id)
     }
-    if testkit and testkit.testcases.include?(self)
-      node.merge!(:selected => true)
-    end
-    unless run_in_production
-      node.merge!(:extraClasses => 'critical')
-    end
+    node.merge!(:selected => true) if testkit and testkit.testcases.include?(self)
+    node.merge!(:extraClasses => 'critical') unless run_in_production
+    node.merge!(:issue => issue.id) if issue
     node
   end
 

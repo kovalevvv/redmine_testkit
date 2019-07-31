@@ -12,9 +12,9 @@
 <p style="width: 800px">
 <%= text_field_tag :tag_list %>
 <%= stylesheet_link_tag 'jquery.tagit.css', plugin: 'redmine_testkit' %>
-  <%= stylesheet_link_tag 'redmine_tags', plugin: 'redmine_testkit' %>
-  <%= javascript_include_tag 'tag-it.min', plugin: 'redmine_testkit' %>
-  <%= javascript_tag "$('#tag_list').tagit({
+<%= stylesheet_link_tag 'redmine_tags', plugin: 'redmine_testkit' %>
+<%= javascript_include_tag 'tag-it.min', plugin: 'redmine_testkit' %>
+<%= javascript_tag "$('#tag_list').tagit({
     tagSource: function(search, showChoices) {
       var that = this;
       $.ajax({
@@ -54,6 +54,11 @@ function updateTree() {
   </span>
 </p>
 <% end %>
+<p>
+  <input name="search" type="text" placeholder="<%= t(:description_search) %>..." autocomplete="off" id="search">
+  <input type="button" id="btnResetSearch" value="<%= t(:button_reset) %>" disabled="true">
+  <span id="matches"></span>
+</p>
 <%= form_tag({}) do -%>
 <div id="testcases" style="max-width: 1800px;" class="content">
 <div style="position: relative; float:right;"><%= link_to " ", "#", id: "x_expander", onclick: "f_expander(this)",  style: "background-image: url(/images/bullet_toggle_plus.png); padding-left: 13px;" %></div>
@@ -62,8 +67,55 @@ function updateTree() {
 <%= javascript_tag do %>
 $(function() {
   $('#testcases').fancytree({
-    extensions: ["persist"],
-    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" }
+    extensions: ["filter", "persist"],
+    persist: {
+      cookie: { // settings passed to jquery.cookie plugin
+        raw: false,
+        expires: "",
+        path: "<%= project_path(:id => @project.identifier) %>",
+        domain: "",
+        secure: false
+      },
+    store: "cookie",
+    types: "expanded"
+    },
+    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
+    filter: {
+      autoExpand: true, // not worked :(
+      autoApply: true,  // Re-apply last filter if lazy data is loaded
+      counter: true,  // Show a badge with number of matching child nodes near parent icons
+      fuzzy: false,  // Match single characters in order, e.g. 'fb' will match 'FooBar'
+      hideExpandedCounter: true,  // Hide counter badge, when parent is expanded
+      highlight: true,  // Highlight matches by wrapping inside <mark> tags
+      mode: "dimm"  // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+    }
+  })
+
+  // search
+
+  var tree = $('#testcases').fancytree("getTree")
+
+  $('#search').keyup(function(e) {
+    var n,
+      match = $(this).val()
+
+    if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+      $('#btnResetSearch').click()
+      return
+    }
+    
+    n = tree.filterNodes(match)
+    
+    $('#btnResetSearch').attr("disabled", false)
+    $('#matches').text("(" + n + " совпадений)")
+  }).focus();
+
+  $('#btnResetSearch').click(function(e){
+    $('#search').val("")
+    $('#matches').text("")
+    tree.clearFilter()
+    $(this).attr("disabled", true)
+    return false
   })
 })
 <% end %>

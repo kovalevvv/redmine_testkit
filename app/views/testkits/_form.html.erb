@@ -25,15 +25,40 @@
     <% end %>
   </p>
   <p>
+    <label><%= t(:description_filter) %></label>
+    <input name="search" type="text" placeholder="<%= t(:description_search) %>..." autocomplete="off" id="search">
+    <input type="button" id="btnResetSearch" value="<%= t(:button_reset) %>" disabled="true">
+    <span id="matches"></span>
+  </p>
+  <p>
     <%= f.label 'Тест-кейсы' %>
-    <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px;"></div>
+    <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px;">
+      <div style="position: relative; float:right;"><%= link_to " ", "#", id: "x_expander", onclick: "f_expander(this)",  style: "background-image: url(/images/bullet_toggle_plus.png); padding-left: 13px;" %></div>
+    </div>
   </p>
 <%= javascript_tag do %>
+
+var selected_nodes = []
+var current_nodes = []
+
 $(function() {
   $('#testcases').fancytree({
+    extensions: ["filter", "persist"],
+    persist: {
+      cookie: { // settings passed to jquery.cookie plugin
+        raw: false,
+        expires: "",
+        path: "<%= project_path(:id => @project.identifier) %>",
+        domain: "",
+        secure: false
+      },
+    store: "cookie",
+    types: "expanded"
+    },
+    quicksearch: true,
   <% case action_name %>
     <% when 'new' %>
-    source: { url: "<%= tree_project_testcase_folders_path(:expanded => true) %>", dataType: "json" },
+    source: { url: "<%= tree_project_testcase_folders_path %>", dataType: "json" },
     <% when 'edit' %>
     source: { url: "<%= project_testkit_tree_path(:testkit_id => @testkit.id) %>", dataType: "json" },
     <% when 'new_from_archive' %>
@@ -44,17 +69,53 @@ $(function() {
     checkbox: true,
     selectMode: 3,
     select: function(event, data) {
-          var s = $.map(data.tree.getSelectedNodes(), function(node) {
-            if (node.data.type == 'Testcase')
-              return '<input type="hidden" name="testkit[testcase_ids][]" value="' + node.key + '">' 
-          });
+      window.selected_nodes = $.map(data.tree.getSelectedNodes(), function(node) {
+        if (node.data.type == 'Testcase')
+          return [[node, '<input type="hidden" name="testkit[testcase_ids][]" value="' + node.key + '">']]
+      });
 
-          if (s.length > 0) {
-            $('#testcases_ids').html(s.join(''))
-          } else {
-            $('#testcases_ids').html('<input type="hidden" name="testkit[testcase_ids][]" value="">')
-          }
-        },
+      if (window.selected_nodes.length > 0) {
+        $('#testcases_ids').html($.map(window.selected_nodes, function(e) {return e[1]}).join(''))
+      } else {
+        $('#testcases_ids').html('<input type="hidden" name="testkit[testcase_ids][]" value="">')
+      }
+    },
+    filter: {
+      autoExpand: true, // not worked :(
+      autoApply: true,  // Re-apply last filter if lazy data is loaded
+      counter: true,  // Show a badge with number of matching child nodes near parent icons
+      fuzzy: false,  // Match single characters in order, e.g. 'fb' will match 'FooBar'
+      hideExpandedCounter: true,  // Hide counter badge, when parent is expanded
+      highlight: true,  // Highlight matches by wrapping inside <mark> tags
+      mode: "dimm"  // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+    }
+  })
+
+  // search
+
+  var tree = $('#testcases').fancytree("getTree")
+
+  $('#search').keyup(function(e) {
+    var n,
+      match = $(this).val()
+
+    if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+      $('#btnResetSearch').click()
+      return
+    }
+    
+    n = tree.filterNodes(match)
+    
+    $('#btnResetSearch').attr("disabled", false)
+    $('#matches').text("(" + n + " совпадений)")
+  }).focus();
+
+ $('#btnResetSearch').click(function(e){
+    $('#search').val("")
+    $('#matches').text("")
+    tree.clearFilter()
+    $(this).attr("disabled", true)
+    return false
   })
 })
 
@@ -80,6 +141,28 @@ $(document).ready(function() {
   });
 });
 <% end %>
+
+<%= javascript_tag do %>
+var current_expand = false
+function f_expander(e) {
+  if (current_expand) {
+    current_expand = false
+    $(e).css('background-image', 'url(/images/bullet_toggle_plus.png)')
+    tree = $("#testcases").fancytree("getTree")
+    tree.visit(function(node){
+      node.setExpanded(current_expand)
+    })
+  } else {
+    current_expand = true
+    $(e).css('background-image', 'url(/images/bullet_toggle_minus.png)')
+    tree = $("#testcases").fancytree("getTree")
+    tree.visit(function(node){
+      node.setExpanded(current_expand)
+    })
+  }
+}
+<% end %>
+
 
 <div id="testcases_ids">
 <% @testkit.testcases.each do |testcase| %>
