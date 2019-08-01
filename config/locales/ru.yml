@@ -22,6 +22,7 @@ ru:
   label_testkit: Тестирование
   label_testkits: Лаборатория тестирования
   label_testcases: Тестовые сценарии
+  label_selected_testcases: Выбранные сценарии
   label_testsuite_plural: Планы тестирования (Test Plan)
   label_run_plural: Выполнение планов тестирования (Test Run)
   label_new_testcase: Добавить тестовый сценарий

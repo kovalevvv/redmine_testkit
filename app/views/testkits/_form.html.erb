@@ -31,9 +31,22 @@
     <span id="matches"></span>
   </p>
   <p>
-    <%= f.label 'Тест-кейсы' %>
-    <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px;">
-      <div style="position: relative; float:right;"><%= link_to " ", "#", id: "x_expander", onclick: "f_expander(this)",  style: "background-image: url(/images/bullet_toggle_plus.png); padding-left: 13px;" %></div>
+    <%= f.label l(:label_testcases) %>
+    <div id="testcases" style="width: 70%; margin-left: 180px; margin-top: -28px; position: relative;">
+      <div style="position: absolute; right: 0px; top: -18px;">
+        <span class="buttons">
+        <%= link_to t(:button_expand_all), "javascript:void(0)", onclick: "expand()", style: 'background: url(/images/bullet_toggle_plus.png) no-repeat 0% 40%; padding-left:16px; margin-left:0; cursor:pointer;' %>
+        <%= link_to t(:button_collapse_all), "javascript:void(0)", onclick: "collapse()", style: 'background: url(/images/bullet_toggle_minus.png) no-repeat 0% 40%; padding-left:16px; margin-left:0; cursor:pointer;' %>
+        </span>
+      </div>
+    </div>
+  </p>
+  <p id="selected_nodes_area">
+    <%= f.label l(:label_selected_testcases) %>
+    <div id="selected_nodes" style="width: 70%; margin-left: 180px; margin-top: -28px;">
+      <ul>
+        <li>Не выбрано</li>
+      </ul>
     </div>
   </p>
 <%= javascript_tag do %>
@@ -75,9 +88,20 @@ $(function() {
       });
 
       if (window.selected_nodes.length > 0) {
+      
+        $('#selected_nodes ul').html('')
+      
+        $.each(window.selected_nodes, function(index, ar) {
+          node = ar[0]
+          $('#selected_nodes ul').append('<li>' + node.data.selected_link + ' <a onclick="remove_node(' + index + ', this)" title="<%= t(:label_relation_delete) %>" href="javascript:void(0);"><img src="/images/link_break.png" alt="Link break"></a></li>')
+        })
+        
         $('#testcases_ids').html($.map(window.selected_nodes, function(e) {return e[1]}).join(''))
+      
       } else {
+        
         $('#testcases_ids').html('<input type="hidden" name="testkit[testcase_ids][]" value="">')
+      
       }
     },
     filter: {
@@ -143,23 +167,26 @@ $(document).ready(function() {
 <% end %>
 
 <%= javascript_tag do %>
-var current_expand = false
-function f_expander(e) {
-  if (current_expand) {
-    current_expand = false
-    $(e).css('background-image', 'url(/images/bullet_toggle_plus.png)')
-    tree = $("#testcases").fancytree("getTree")
-    tree.visit(function(node){
-      node.setExpanded(current_expand)
-    })
-  } else {
-    current_expand = true
-    $(e).css('background-image', 'url(/images/bullet_toggle_minus.png)')
-    tree = $("#testcases").fancytree("getTree")
-    tree.visit(function(node){
-      node.setExpanded(current_expand)
-    })
-  }
+
+function expand() {
+  tree = $("#testcases").fancytree("getTree")
+  tree.visit(function(node){
+    node.setExpanded(true)
+  })
+  return false
+}
+
+function collapse() {
+  tree = $("#testcases").fancytree("getTree")
+  tree.visit(function(node){
+    node.setExpanded(false)
+  })
+  return false
+}
+
+function remove_node(index, element) {
+  window.selected_nodes[index][0].setSelected(false)
+  $(element).closest('li').remove()
 }
 <% end %>
 

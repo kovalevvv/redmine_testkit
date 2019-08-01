@@ -129,12 +129,10 @@ class Testcase < ActiveRecord::Base
     TESTCASE_PRIORITIES
   end
 
-  def name_with_id
-    if parent
-      "[#{project.testkit_settings && project.testkit_settings.testcase_prefix.present? ? project.testkit_settings.testcase_prefix : "TC"}#{parent.id}] #{name.mb_chars.humanize}"
-    else
-      "[#{project.testkit_settings && project.testkit_settings.testcase_prefix.present? ? project.testkit_settings.testcase_prefix : "TC"}#{id}] #{name.mb_chars.humanize}"
-    end
+  def name_with_id(link: false)
+    prefix = "#{project.testkit_settings && project.testkit_settings.testcase_prefix.present? ? project.testkit_settings.testcase_prefix : "TC"}"
+    title = link ? link_to(name.mb_chars.humanize, project_testcase_path(:project_id => project.identifier, :id => self.id), remote: true) : name.mb_chars.humanize
+    parent ? "[#{prefix}#{parent.id}] #{title}" : "[#{prefix}#{id}] #{title}"
   end
 
   def to_tree(testkit: nil)
@@ -144,7 +142,8 @@ class Testcase < ActiveRecord::Base
       key: id,
       type: "Testcase",
       icon: priority,
-      path: Rails.application.routes.url_helpers.project_testcase_path(project_id: self.project.identifier, id: self.id)
+      path: Rails.application.routes.url_helpers.project_testcase_path(project_id: self.project.identifier, id: self.id),
+      selected_link: tag_list.present? ? "#{name_with_id(link: true)} (#{tag_list.join(", ")})" : "#{name_with_id(link: true)}"
     }
     node.merge!(:selected => true) if testkit and testkit.testcases.include?(self)
     node.merge!(:extraClasses => 'critical') unless run_in_production
