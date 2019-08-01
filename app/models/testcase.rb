@@ -64,8 +64,12 @@ class Testcase < ActiveRecord::Base
     distance_of_time_in_words(0, duration.minutes)
   end
 
-  def self.clear_text(textile)
-    n = Nokogiri::XML.fragment(ApplicationController.helpers.textilizable(textile))
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
+
+  def clear_text(textile)
+    n = Nokogiri::XML.fragment(textilizable(textile))
     n.css('img').remove
     n.css('abbr').each {|node| node.replace "#{n.text}(#{n.attribute('title')})"}
     n.css('ins').each do |node|
@@ -75,7 +79,10 @@ class Testcase < ActiveRecord::Base
     end
     n.css('a.wiki-anchor').remove
     n.css('a').each do |node|
-      node['style'] = 'color: #5B9BD5; text-decoration: underline'
+      unless node[:href] =~ /^http/i
+        node[:href] = 'https://repo.mos.ru' + node[:href]
+      end
+      node[:style] = 'color: #5B9BD5; text-decoration: underline'
       node.remove if node.has_attribute?('name')
     end
     n.css('blockquote').reverse.each {|node| node.replace node.inner_html }
@@ -84,7 +91,7 @@ class Testcase < ActiveRecord::Base
   end
 
   def description_doc
-    Sablon.content(:html, Testcase.clear_text(self.description))
+    Sablon.content(:html, clear_text(self.description))
   end
 
   def chart_values

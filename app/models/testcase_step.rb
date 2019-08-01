@@ -5,11 +5,11 @@ class TestcaseStep < ActiveRecord::Base
   extend OrderAsSpecified
 
   def if_doc
-    Sablon.content(:html, Testcase.clear_text(self.if))
+    Sablon.content(:html, testcase.clear_text(self.if))
   end
 
   def then_doc
-    Sablon.content(:html, Testcase.clear_text(self.then))
+    Sablon.content(:html, testcase.clear_text(self.then))
   end
   
   def attachments_editable?(user=User.current)
