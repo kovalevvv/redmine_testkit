@@ -4,12 +4,16 @@ class TestcaseStep < ActiveRecord::Base
   acts_as_attachable
   extend OrderAsSpecified
 
+  after_initialize do |step|
+    @testcase ||= self.testcase.nil? ? Testcase.new : self.testcase
+  end
+
   def if_doc
-    Sablon.content(:html, testcase.clear_text(self.if))
+    Sablon.content(:html, @testcase.clear_text(self.if))
   end
 
   def then_doc
-    Sablon.content(:html, testcase.clear_text(self.then))
+    Sablon.content(:html, @testcase.clear_text(self.then))
   end
   
   def attachments_editable?(user=User.current)
