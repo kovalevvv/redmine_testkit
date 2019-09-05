@@ -1,8 +1,18 @@
 <%= render 'tabs' %>
 <h2>Отчет по тестированию: <%= @report.name %></h2>
 <div class="buttons">
-  <%= link_to 'Протокол тестирования', project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: 'ps'), :class => 'icon icon-report' %>
-  <%= link_to 'ПМИ', project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: 'pmi'), :class => 'icon icon-report' %>
+  <%= link_to @project.testkit_setting.template_name(:test_report),
+    project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: :test_report), :class => 'icon icon-report' %>
+
+  <%= link_to @project.testkit_setting.template_name(:test_plan),
+    project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: :test_plan), :class => 'icon icon-report' %>
+
+  <% if @project.testkit_setting.attachments.present? %>
+    <% @project.testkit_setting.attachments.each do |attachment| %>
+      <%= link_to @project.testkit_setting.template_name(attachment),
+        project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: attachment.id), :class => 'icon icon-report' %>
+    <% end %>
+  <% end %>
 </div>
 <div class="content">
   <div class="box" style="background: #FFD;">
@@ -51,8 +61,8 @@
       <% end %>
       <% if User.current.allowed_to?(:add_issues, @project) 
         defect_params = { :testcase_id => testcase.id }
-        if @project.testkit_settings.present? && @project.testkit_settings.new_defect_tracker_id.present?
-          defect_params.merge!({:issue => {:tracker_id => @project.testkit_settings.new_defect_tracker_id }})
+        if @project.testkit_setting.present? && @project.testkit_setting.new_defect_tracker_id.present?
+          defect_params.merge!({:issue => {:tracker_id => @project.testkit_setting.new_defect_tracker_id }})
         end
         %>
         <p><%= link_to l(:create_defect), project_new_issue_with_testcase_path(defect_params), :class => 'icon icon-add' %></p>

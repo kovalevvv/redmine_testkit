@@ -1,15 +1,54 @@
-<%= form_for @project, :url => { :action => 'testkit_settings', :id => @project }, :method => :post do |f| %>
+<%= form_for @project, :url => { :action => 'testkit_settings', :id => @project }, :method => :post, :html => { :multipart => true } do |f| %>
   <%= hidden_field_tag :tab, 'testkit_settings' %>
-  <%= fields_for 'project[testkit_settings_attributes]', @project.testkit_settings do |testkit_settings_fields| %>
+  <%= fields_for 'project[testkit_setting_attributes]', @project.testkit_setting  do |testkit_setting_fields| %>
     <fieldset>
       <legend><%= l(:legend_select_project_new_defect_tracker) %></legend>
-        <p><%= testkit_settings_fields.collection_select :new_defect_tracker_id, @project.trackers, :id, :name %></p>
+        <p><%= testkit_setting_fields.collection_select :new_defect_tracker_id, @project.trackers, :id, :name %></p>
     </fieldset>
     <fieldset>
       <legend><%= l(:legend_testcase_prefix) %></legend>
-      <p><%= testkit_settings_fields.text_field :testcase_prefix, :placeholder => 'TC' %></p>
+      <p><%= testkit_setting_fields.text_field :testcase_prefix, :placeholder => 'TC' %></p>
     </fieldset>
+    <h3>Шаблоны документов</h3>
+    <p><a href="https://github.com/senny/sablon/blob/master/misc/TEMPLATE.md" target="_blank">Как добавить переменные в .docx</a></p>
+    <p><a href="https://github.com/senny/sablon#conditionals" target="_blank">Условные операторы</a></p>
+    <p>Все доступные переменные есть в стандартных шаблонах</p>
+    <% TestkitSetting::avaliable_types.keys.each do |type| %>
+      <fieldset>
+        <legend><%= @project.testkit_setting.template_name(type) %></legend>
+        <p><%= link_to "Стандартный шаблон '#{@project.testkit_setting.template_name(type)}'",
+          "/plugin_assets/redmine_testkit/docx_templates/#{TestkitSetting::avaliable_types[type][:filename]}",
+          :class => 'icon', :style => 'background-image: url(/images/document.png);' %></p>
+        <p><%= file_field_tag "[#{type}][dummy][file]", accept: '.docx' %></p>
+        <% if @project.testkit_setting.send(type).present? %>
+          <%= render :partial => 'attachments/links',
+                :locals => {
+                :container => @project.testkit_setting,
+                :attachments => [@project.testkit_setting.send(type)],
+                :options => { :editable => false, :deletable => @project.testkit_setting.attachments_deletable?, :author => true },
+                :thumbnails => false
+              }
+          %>
+        <% end %>
+      </fieldset>
+    <% end %>
+    
+    <fieldset>
+      <legend>Другие шаблоны</legend>
+      <p>Доступны для выгрузки на странице отчета</p>
+      <%= link_to_attachments @project.testkit_setting, :thumbnails => false %>
+      <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label>
+          <%= render :partial => 'common/attachments_form', :locals => { :container => @project.testkit_setting } %>
+      </p>
+    </fieldset>
+
   <% end %>
   <p><%= submit_tag l(:button_save) %></p>
+<% end %>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    $('#cbp_images_form').hide()
+  })
 <% end %>
 

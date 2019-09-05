@@ -2,8 +2,8 @@ class TestcaseValidator < ActiveModel::Validator
   def validate(record)
     testkit = Testkit.new(author: User.current, created_at: Time.now, parent: Testkit.new(name: "test"), assigned_to: User.current)
     begin
-      docx_template = testkit.get_word_template(:pmi)
-      template = Sablon.template(File.expand_path(docx_template))
+      docx_template = testkit.project.testkit_setting.get_template("test_plan")
+      template = Sablon.template(File.expand_path(docx_template[:file]))
     rescue StandardError => e
       record.errors[:base] << "%s: %s" % [I18n.t(:word_converter_error), e.message]
     end
@@ -130,7 +130,7 @@ class Testcase < ActiveRecord::Base
   end
 
   def name_with_id(link: false)
-    prefix = "#{project.testkit_settings && project.testkit_settings.testcase_prefix.present? ? project.testkit_settings.testcase_prefix : "TC"}"
+    prefix = "#{project.testkit_setting && project.testkit_setting.testcase_prefix.present? ? project.testkit_setting.testcase_prefix : "TC"}"
     title = link ? link_to(name.mb_chars.humanize, project_testcase_path(:project_id => project.identifier, :id => self.id), remote: true) : name.mb_chars.humanize
     parent ? "[#{prefix}#{parent.id}] #{title}" : "[#{prefix}#{id}] #{title}"
   end

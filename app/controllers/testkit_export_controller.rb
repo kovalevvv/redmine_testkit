@@ -5,8 +5,8 @@ class TestkitExportController < ApplicationController
   def make
     @report = Testkit.find(params[:testkit_id])
     begin
-      docx_template = @report.get_word_template(type.to_sym)
-      template = Sablon.template(File.expand_path(docx_template))
+      docx_template = @project.testkit_setting.get_template(type)
+      template = Sablon.template(File.expand_path(docx_template[:file]))
     rescue StandardError => e
       return render :not_found
     end
@@ -17,7 +17,7 @@ class TestkitExportController < ApplicationController
     }.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc, :name_with_id]}))
 
     begin    
-      send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, I18n.t('word_template_'+type), @report.name, Date.current]
+      send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, docx_template[:title], @report.name, Date.current]
     rescue StandardError => e
       render_error :message => e.message
     end

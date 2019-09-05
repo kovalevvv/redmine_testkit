@@ -32,8 +32,8 @@ ru:
   label_archive: Архив
   label_edit_tab: Редактирование
   word_converter_error: Ошибка конвертации в Word
-  word_template_pmi: ПМИ
-  word_template_ps: Протокол тестирования
+  word_template_test_plan: ПМИ
+  word_template_test_report: Протокол тестирования
   label_add_step: Добавить шаг
   select_yes: Да
   select_no: Нет
@@ -75,3 +75,7 @@ ru:
           attributes:
             issue_id:
               attached_to_another_task: уже связана с другим тест-кейсом
+        testkit_setting:
+          attributes:
+            base:
+              only_docx_allowed: Только .docx файлы

@@ -134,8 +134,4 @@ class Testkit < ActiveRecord::Base
     users.uniq.sort
   end
 
-  def get_word_template(type)
-    available_templates = { :ps => 'ps.docx', :pmi => 'pmi.docx' }
-    TestkitExportController.new.lookup_context.find_template("#{TestkitExportController.controller_path}/#{available_templates[type]}").identifier
-  end
 end
