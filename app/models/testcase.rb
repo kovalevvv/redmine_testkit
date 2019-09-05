@@ -1,8 +1,9 @@
 class TestcaseValidator < ActiveModel::Validator
   def validate(record)
-    testkit = Testkit.new(author: User.current, created_at: Time.now, parent: Testkit.new(name: "test"), assigned_to: User.current)
+    testkit = Testkit.new(author: User.current, created_at: Time.now, parent: Testkit.new(name: "test"), assigned_to: User.current, project_id: record.project_id)
     begin
-      docx_template = testkit.project.testkit_setting.get_template("test_plan")
+      testkit.project.build_testkit_setting unless testkit.project.testkit_setting
+      docx_template = testkit.project.testkit_setting.get_template(:test_plan)
       template = Sablon.template(File.expand_path(docx_template[:file]))
     rescue StandardError => e
       record.errors[:base] << "%s: %s" % [I18n.t(:word_converter_error), e.message]
