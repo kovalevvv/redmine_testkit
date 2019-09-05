@@ -1,6 +1,7 @@
 <%= form_for @project, :url => { :action => 'testkit_settings', :id => @project }, :method => :post, :html => { :multipart => true } do |f| %>
   <%= hidden_field_tag :tab, 'testkit_settings' %>
-  <%= fields_for 'project[testkit_setting_attributes]', @project.testkit_setting  do |testkit_setting_fields| %>
+  <%= fields_for 'project[testkit_setting_attributes]', 
+    @project.testkit_setting.present? ? @project.testkit_setting : @project.build_testkit_setting do |testkit_setting_fields| %>
     <fieldset>
       <legend><%= l(:legend_select_project_new_defect_tracker) %></legend>
         <p><%= testkit_setting_fields.collection_select :new_defect_tracker_id, @project.trackers, :id, :name %></p>
