@@ -45,7 +45,6 @@
     <%= f.label l(:label_selected_testcases) %>
     <div id="selected_nodes" style="width: 70%; margin-left: 180px; margin-top: -28px;">
       <ul>
-        <li>Не выбрано</li>
       </ul>
     </div>
   </p>
@@ -53,6 +52,24 @@
 
 var selected_nodes = []
 var current_nodes = []
+
+function make_form_data_and_ul(data) {
+  window.selected_nodes = $.map(data.tree.getSelectedNodes(), function(node) {
+    if (node.data.type == 'Testcase')
+      return [[node, '<input type="hidden" name="testkit[testcase_ids][]" value="' + node.key + '">']]
+  });
+  $('#selected_nodes ul').html('')
+  if (window.selected_nodes.length > 0) {
+    $.each(window.selected_nodes, function(index, ar) {
+      node = ar[0]
+      $('#selected_nodes ul').append('<li>' + node.data.selected_link + ' <a onclick="remove_node(' + index + ', this)" title="<%= t(:label_relation_delete) %>" href="javascript:void(0);"><img src="/images/link_break.png" alt="Link break"></a></li>')
+    })
+    $('#testcases_ids').html($.map(window.selected_nodes, function(e) {return e[1]}).join(''))
+  } else {
+    $('#testcases_ids').html('<input type="hidden" name="testkit[testcase_ids][]" value="">')
+    $('#selected_nodes ul').append('<li>Не выбрано</li>')
+  }
+}
 
 $(function() {
   $('#testcases').fancytree({
@@ -82,27 +99,10 @@ $(function() {
     checkbox: true,
     selectMode: 3,
     select: function(event, data) {
-      window.selected_nodes = $.map(data.tree.getSelectedNodes(), function(node) {
-        if (node.data.type == 'Testcase')
-          return [[node, '<input type="hidden" name="testkit[testcase_ids][]" value="' + node.key + '">']]
-      });
-
-      if (window.selected_nodes.length > 0) {
-      
-        $('#selected_nodes ul').html('')
-      
-        $.each(window.selected_nodes, function(index, ar) {
-          node = ar[0]
-          $('#selected_nodes ul').append('<li>' + node.data.selected_link + ' <a onclick="remove_node(' + index + ', this)" title="<%= t(:label_relation_delete) %>" href="javascript:void(0);"><img src="/images/link_break.png" alt="Link break"></a></li>')
-        })
-        
-        $('#testcases_ids').html($.map(window.selected_nodes, function(e) {return e[1]}).join(''))
-      
-      } else {
-        
-        $('#testcases_ids').html('<input type="hidden" name="testkit[testcase_ids][]" value="">')
-      
-      }
+      make_form_data_and_ul(data);
+    },
+    init: function(event, data) {
+     make_form_data_and_ul(data);
     },
     filter: {
       autoExpand: true, // not worked :(
@@ -143,30 +143,6 @@ $(function() {
   })
 })
 
-function observeAutocompleteFieldTestkit(element) {
-  $(document).ready(function() {
-    element.autocomplete($.extend({
-      source: <%= "'#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => Setting.cross_project_subtasks)}'".html_safe %>,
-      minLength: 2,
-      search: function(){$('#ajax-indicator').show();},
-      response: function(){$('#ajax-indicator').hide();}
-    }));
-    element.addClass('autocomplete');
-  });
-}
-
-observeAutocompleteFieldTestkit($('.relation_issue_field'));
-
-$(document).ready(function() {
-  $('#add_issue_relation_field').click(function() {
-    $("<%= j text_field_tag :'testkit[issue_ids][]', nil, :class => 'relation_issue_field' %><br>").insertAfter($('.relation_issue_field:last').next());
-    observeAutocompleteFieldTestkit($('.relation_issue_field:last'));
-    return false;
-  });
-});
-<% end %>
-
-<%= javascript_tag do %>
 
 function expand() {
   tree = $("#testcases").fancytree("getTree")
@@ -188,6 +164,30 @@ function remove_node(index, element) {
   window.selected_nodes[index][0].setSelected(false)
   $(element).closest('li').remove()
 }
+
+function observeAutocompleteFieldTestkit(element) {
+  $(document).ready(function() {
+    element.autocomplete($.extend({
+      source: <%= "'#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => Setting.cross_project_subtasks)}'".html_safe %>,
+      minLength: 2,
+      search: function(){$('#ajax-indicator').show();},
+      response: function(){$('#ajax-indicator').hide();}
+    }));
+    element.addClass('autocomplete');
+  });
+}
+
+observeAutocompleteFieldTestkit($('.relation_issue_field'));
+
+$(document).ready(function() {
+  $('#add_issue_relation_field').click(function() {
+    $("<%= j text_field_tag :'testkit[issue_ids][]', nil, :class => 'relation_issue_field' %><br>").insertAfter($('.relation_issue_field:last').next());
+    observeAutocompleteFieldTestkit($('.relation_issue_field:last'));
+    return false;
+  });
+
+});
+
 <% end %>
 
 

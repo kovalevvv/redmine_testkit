@@ -20,7 +20,7 @@
         <p><%= link_to "Стандартный шаблон '#{@project.testkit_setting.template_name(type)}'",
           "/plugin_assets/redmine_testkit/docx_templates/#{TestkitSetting::avaliable_types[type][:filename]}",
           :class => 'icon', :style => 'background-image: url(/images/document.png);' %></p>
-        <p><%= file_field_tag "[#{type}][dummy][file]", accept: '.docx' %></p>
+        <p><%= file_field_tag "[#{type}][dummy][file]", accept: '.docx', :class => 'dummy_file', data: {:present => @project.testkit_setting.send(type).present?} %></p>
         <% if @project.testkit_setting.send(type).present? %>
           <%= render :partial => 'attachments/links',
                 :locals => {
@@ -50,6 +50,15 @@
 <%= javascript_tag do %>
   $(document).ready(function() {
     $('#cbp_images_form').hide()
+
+    $('.dummy_file').change(function(event) {
+      if ($(this).attr('data-present') == "true") {
+        if (!window.confirm("Вы точно хотите заменить загруженный шаблон?")) {
+          $(this).val(null)
+        }
+      }
+    });
+
   })
 <% end %>
 

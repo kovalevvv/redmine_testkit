@@ -14,7 +14,7 @@ class TestkitSetting < ActiveRecord::Base
       if self.send(type).present? && attachment = self.send(type)
         attachment.diskfile
       else
-        TestkitExportController.new.lookup_context.find_template("#{TestkitExportController.controller_path}/#{self.class::avaliable_types[type.to_sym][:filename]}").identifier
+        self.class::default_template(type)
       end
     else
       attachment = Attachment.find(type)
@@ -22,6 +22,10 @@ class TestkitSetting < ActiveRecord::Base
       attachment.diskfile
     end
     { file: file, title: title }
+  end
+
+  def self.default_template(type)
+    TestkitExportController.new.lookup_context.find_template("#{TestkitExportController.controller_path}/#{self.class::avaliable_types[type.to_sym][:filename]}").identifier
   end
 
   def template_name(obj)
