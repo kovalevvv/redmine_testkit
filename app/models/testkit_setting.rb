@@ -25,7 +25,7 @@ class TestkitSetting < ActiveRecord::Base
   end
 
   def self.default_template(type)
-    TestkitExportController.new.lookup_context.find_template("#{TestkitExportController.controller_path}/#{self.class::avaliable_types[type.to_sym][:filename]}").identifier
+    TestkitExportController.new.lookup_context.find_template("#{TestkitExportController.controller_path}/#{self::avaliable_types[type.to_sym][:filename]}").identifier
   end
 
   def template_name(obj)

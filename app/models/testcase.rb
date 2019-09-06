@@ -68,7 +68,7 @@ class Testcase < ActiveRecord::Base
   include ApplicationHelper
 
   def clear_text(textile)
-    n = Nokogiri::XML.fragment(textilizable(textile))
+    n = Nokogiri::XML.fragment(textilizable(textile, :headings => false))
     n.css('img').remove
     n.css('abbr').each {|node| node.replace "#{n.text}(#{n.attribute('title')})"}
     n.css('ins').each do |node|

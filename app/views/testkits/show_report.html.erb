@@ -92,8 +92,8 @@
                   <th>Статус</th>
                 </tr>
                 <tr align="left">
-                  <td width="49%"><%= textilizable step.if, :object => testcase, :attachments => testcase.attachments, :object => testcase %></td>
-                  <td width="49%"><%= textilizable step.then, :object => testcase, :attachments => testcase.attachments, :object => testcase %></td>
+                  <td width="49%"><%= textilizable step.if, :object => testcase, :attachments => testcase.attachments, :object => testcase, :headings => false %></td>
+                  <td width="49%"><%= textilizable step.then, :object => testcase, :attachments => testcase.attachments, :object => testcase, :headings => false %></td>
                   <td width="4%" class="<%= step.status %>_style"><%= step.status %></td>
                 </tr>
                 <% if step.result.present? %>
