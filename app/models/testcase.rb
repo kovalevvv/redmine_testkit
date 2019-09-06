@@ -128,10 +128,14 @@ class Testcase < ActiveRecord::Base
     TESTCASE_PRIORITIES
   end
 
-  def name_with_id(link: false)
+  def current_id
     prefix = "#{project.testkit_setting && project.testkit_setting.testcase_prefix.present? ? project.testkit_setting.testcase_prefix : "TC"}"
+    parent ? "#{prefix}#{parent.id}" : "#{prefix}#{id}"
+  end
+
+  def name_with_id(link: false)
     title = link ? link_to(name.mb_chars.humanize, project_testcase_path(:project_id => project.identifier, :id => self.id), remote: true) : name.mb_chars.humanize
-    parent ? "[#{prefix}#{parent.id}] #{title}" : "[#{prefix}#{id}] #{title}"
+    "[#{current_id}] #{title}"
   end
 
   def to_tree(testkit: nil)

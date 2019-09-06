@@ -14,9 +14,9 @@ class TestkitExportController < ApplicationController
     context = {
       project: @project.name,
       report: @report.as_json
-    }.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc, :name_with_id]}))
+    }.merge!(:testcases => @report.testcases.as_json({:include => {:steps => {:methods => [:if_doc, :then_doc], :except => [:if, :then]}}, :methods => [:duration_text, :description_doc, :name_with_id, :current_id]}))
 
-    begin    
+    begin
       send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, docx_template[:title], @report.name, Date.current]
     rescue StandardError => e
       render_error :message => e.message
