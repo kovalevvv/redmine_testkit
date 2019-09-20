@@ -90,7 +90,7 @@
     <div style="display: none;"><%= f.text_area :comment, style: "width: 100%; height: 100px;" %></div>
   </fieldset>
   <div style="text-align: right; color: lightgrey;">
-    <span>Сохранено <span id="timer" time="<%= @run.updated_at.localtime.strftime("%Y,%m,%d,%H,%M,%S") %>"></span></span>
+    <span>Сохранено <span id="timer" data-updated-at="<%= @run.updated_at.localtime %>" data-datetime="<%= Time.zone.now.localtime %>"></span></span>
   </div>
   
   <div style="text-align: right;"><%= f.submit @run.check_done? ? "Завершить тестирование" : l(:button_save), :id => 'submit' %></div>
@@ -146,7 +146,7 @@
   })();
 <% end %>
 <%= javascript_tag do %>
-jQuery.fn.timeUpdate = function (filter,pole,intarval, options) {
+jQuery.fn.timeUpdate = function (filter, repeat, options) {
   var options = jQuery.extend({
    lang: {
     years:   ['год', 'года', 'лет'],
@@ -203,22 +203,28 @@ jQuery.fn.timeUpdate = function (filter,pole,intarval, options) {
       return result.reverse().join(' ');
   };
   var timeUpdate = function () {
-      var need_to_time_update=$(filter);
-     if(need_to_time_update.size()>0){
-      need_to_time_update.each(function(i){
-      var date=need_to_time_update.eq(i).attr(pole).toString().split(",");
-      var s = timeDifference(new Date(), new Date(date[0],date[1]-1,date[2],date[3],date[4],date[5]));
-        if (s.length) need_to_time_update.eq(i).html(s+options.end); 
-             else need_to_time_update.eq(i).html(options.tolkochto);
-      });
-     }
+    let need_to_time_update=$(filter);
+    let updated_at = Date.parse(need_to_time_update.data('updated-at'))
+    let datetime = Date.parse(need_to_time_update.data('datetime'))
+    let localdate = new Date()
+    if (delta == 0) {
+      delta = datetime - localdate.getTime()
+    }
+    let localtime_with_delta = localdate.getTime() + delta
+    var s = timeDifference(new Date(localtime_with_delta), new Date(updated_at))
+    if (s.length) {
+      need_to_time_update.html(s+options.end)
+    } else {
+      need_to_time_update.html(options.tolkochto)
+    }
   };
   timeUpdate();
-  var timer = setInterval(timeUpdate, intarval);
+  var delta = 0;
+  var timer = setInterval(timeUpdate, repeat);
  };
 
   (function() {
-    $('#timer').timeUpdate('#timer','time',1000);
+    $('#timer').timeUpdate('#timer', 1000);
   }
   )()
 <% end %>

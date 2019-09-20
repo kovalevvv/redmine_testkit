@@ -82,7 +82,7 @@ class TestkitsController < ApplicationController
     end
     respond_to do |format|
       format.html
-      format.js { render :text => "$('#timer').attr('time','#{@run.updated_at.localtime.strftime("%Y,%m,%d,%H,%M,%S")}');" }
+      format.js { render :text => "$('#timer').data('updated-at','#{@run.updated_at.localtime}');" }
     end
   end
 
