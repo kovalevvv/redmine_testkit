@@ -42,7 +42,9 @@ ru:
   select_priority_critical: Высокий
   field_run_in_production: Выполнение на продуктиве?
   field_testkit_client_env: Окружение клиента
-  field_testkit_env: Площадка тестирования
+  field_testkit_env: Среда тестирования
+  label_client_envs: Клиентские окружения
+  label_server_envs: Среды тестирования
   field_issue_ids: 'Задачи #'
   field_version_ids: Сборка
   field_duration: Оценка времени
@@ -56,6 +58,11 @@ ru:
   hidden_text: Скрытый текст
   input_text_tiny_modal: Введите текст
   button_import_testcase: Импорт из CSV
+  new_test_plan: Новый план тестирования
+  edit_test_plan: Редактируем план тестирования
+  new_test_run: Запуск тестирования по плану
+  edit_run: Редактируем запуск
+  parent_test_plan: По плану тестирования
   testcase:
     zero:  "%{count} тест-кейсов"
     one:   "%{count} тест-кейс"

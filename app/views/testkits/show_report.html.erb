@@ -18,7 +18,7 @@
   <div class="box" style="background: #FFD;">
   <div style="float: right; width: 500px;"><canvas id="chart-area"></canvas></div>
     <p>
-      <strong>Создал тестирование:</strong> <%= @report.author %> <strong>в</strong> <%= format_time(@report.created_at) %> <strong>по шаблону: </strong> <%= @report.parent.name -%>
+      <strong>Создал запуск тестирования (Test Run):</strong> <%= @report.author %> <strong>в</strong> <%= format_time(@report.created_at) %> <strong>по плану: </strong> <%= @report.parent.name -%>
       <% if @report.last_user_update.present? %>
 <strong>, последняя редакция:</strong> <%= @report.last_user_update %> <strong>в</strong> <%= format_time(@report.last_user_update_date) %>
       <% end %>
@@ -27,10 +27,10 @@
       <strong>Оценка времени:</strong> <%= distance_of_time_in_words(0, @report.testcases.sum(:duration).minutes) %>
     </p>
     <p>
-      <strong>Старт:</strong> <%= @report.user_start %> <strong>в</strong> <%= format_time(@report.start_date) %>
+      <strong>Тестирование начато:</strong> <%= @report.user_start %> <strong>в</strong> <%= format_time(@report.start_date) %>
     </p>
     <p>
-      <strong>Завершено:</strong> <%= @report.user_end %> <strong>в</strong> <%= format_time(@report.done_date) %>
+      <strong>Тестирование завершено:</strong> <%= @report.user_end %> <strong>в</strong> <%= format_time(@report.done_date) %>
     </p>
     <p>
       <strong>В работе:</strong> <%= distance_of_time_in_words(@report.start_date, @report.done_date) %>
@@ -42,16 +42,20 @@
       <strong>Сервер:</strong> <%= @report.env %>
     </p>
     <p>
-      <strong>Описание:</strong> <%= @report.description %>
+      <strong>Описание плана тестирования:</strong> <%= @report.description %>
     </p>
     <p>
-      <strong>Связанные задачи:</strong> <%= @report.issues.present? ? @report.issues.collect {|i| "##{i.id}"}.join(', ') : 'Отсутствуют' %>
+      <strong>Связанные задачи:</strong> <%= @report.issues.present? ? @report.issues.collect do |i|
+          link_to "##{i.id}", issue_path(i), :target => "_blank"
+        end.join(', ').html_safe : 'Отсутствуют' %>
     </p>
     <p>
-      <strong>Сборка:</strong> <%= @report.versions.present? ? @report.versions.collect {|v| "#{v.name}"}.join('<br /> ') : 'Отсутствует' %>
+      <strong>Сборка:</strong> <%= @report.versions.present? ? @report.versions.collect do |v|
+        link_to "#{v.name}", version_path(v), :target => "_blank"
+        end.join('<br /> ').html_safe : 'Отсутствует' %>
     </p>
     <p>
-      <strong>Комментарий к тесту:</strong> <%= @report.comment %>
+      <strong>Комментарий по результатам тестирования:</strong> <%= @report.comment %>
     </p>
   </div>
   <% @report.testcases.each_with_index do |testcase,i| %>

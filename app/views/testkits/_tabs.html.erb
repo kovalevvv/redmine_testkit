@@ -1,19 +1,23 @@
 <div class="tabs">
   <ul>
-  <% if User.current.allowed_to?(:view_testkits, @project) %>
-    <li><%= link_to l(:label_testkits), project_testkits_path, :class => (controller.controller_name == "testkits" and not ['show_report','index_reports','index_archive'].include?(controller.action_name)) ? 'selected' : ''  %></li>
-  <% end %>
-  <% if User.current.allowed_to?(:view_testcases, @project) %>
-    <li><%= link_to l(:label_testcases), project_testcases_path, :class => controller.controller_name == "testcases" ? 'selected' : ''  %></li>
-  <% end %>
-  <% if User.current.allowed_to?(:view_testkit_envs, @project) %>
-    <li><%= link_to l(:label_testkit_envs), project_testkit_envs_path, :class => controller.controller_name == "testkit_envs" ? 'selected' : ''  %></li>
-  <% end %>
-  <% if User.current.allowed_to?(:view_reports, @project) %>
-    <li><%= link_to l(:label_reports), project_testkit_reports_path, :class => ['show_report','index_reports'].include?(controller.action_name) ? 'selected' : ''  %></li>
-  <% end %>
-  <% if User.current.allowed_to?(:manage_archive, @project) %>
-    <li><%= link_to l(:label_archive), project_testkit_archive_path, :class => controller.action_name == "index_archive" ? 'selected' : ''  %></li>
+  <% if defined?(option) %>
+    <li><%= link_to l("label_" + option.to_s), "javascript:void(0)", :class => 'selected' %></li>
+  <% else %>
+    <% if User.current.allowed_to?(:view_testkits, @project) %>
+      <li><%= link_to l(:label_testkits), project_testkits_path, :class => (controller.controller_name == "testkits" and not ['show_report','index_reports','index_archive'].include?(controller.action_name)) ? 'selected' : ''  %></li>
+    <% end %>
+    <% if User.current.allowed_to?(:view_testcases, @project) %>
+      <li><%= link_to l(:label_testcases), project_testcases_path, :class => controller.controller_name == "testcases" ? 'selected' : ''  %></li>
+    <% end %>
+    <% if User.current.allowed_to?(:view_testkit_envs, @project) %>
+      <li><%= link_to l(:label_testkit_envs), project_testkit_envs_path, :class => controller.controller_name == "testkit_envs" ? 'selected' : ''  %></li>
+    <% end %>
+    <% if User.current.allowed_to?(:view_reports, @project) %>
+      <li><%= link_to l(:label_reports), project_testkit_reports_path, :class => ['show_report','index_reports'].include?(controller.action_name) ? 'selected' : ''  %></li>
+    <% end %>
+    <% if User.current.allowed_to?(:manage_archive, @project) %>
+      <li><%= link_to l(:label_archive), project_testkit_archive_path, :class => controller.action_name == "index_archive" ? 'selected' : ''  %></li>
+    <% end %>
   <% end %>
   </ul>
 </div>

@@ -1,10 +1,11 @@
-<h2>Редактируем: <%= @testkit.name %></h2>
-<%= render 'tabs' %>
+<%= render partial: 'tabs', locals: { option: :testkits } %>
+<h2><%= l(:edit_run) %>: <%= @testkit.name %></h2>
 <div class="wiki" style="width: 70%">
-<h2>По шаблону: <%= @testkit.parent.present? ? @testkit.parent.name : @testkit.name %></h2>
+<h2><%= l(:parent_test_plan) %>: <%= @testkit.parent.present? ? @testkit.parent.name : @testkit.name %></h2>
 <%= error_messages_for @testkit %>
 <%= form_for(@testkit, url: project_testkit_update_run_path) do |f| %>
   <%= render partial: 'form_run', locals: {f: f} %>
-  <%= f.submit 'Сохранить' %>
+  <%= f.submit l(:button_save) %>
+  <%= button_tag l(:button_cancel), :type => :button, :onclick => "location.href = '#{project_testkits_path()}';", :style => 'vertical-align: middle;' %>
 <% end %>
 </div>

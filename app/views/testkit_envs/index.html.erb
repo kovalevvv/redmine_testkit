@@ -1,5 +1,5 @@
 <%= render 'testkits/tabs' %>
-<h2 class="title">Клиент</h2>
+<h2 class="title"><%= l(:label_client_envs) %></h2>
 <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
   <div class="buttons">
     <%= link_to 'Добавить', new_project_testkit_env_path(env_type: "client"), :class => 'icon icon-add', :remote => :true %>
@@ -29,7 +29,7 @@
     </tr>
   <% end %>
 </table>
-<br/><h2 class="title">Сервер</h2>
+<br/><h2 class="title"><%= l(:label_server_envs) %></h2>
 <% if User.current.allowed_to?(:manage_testkit_envs, @project) %>
   <div class="buttons">
     <%= link_to 'Добавить', new_project_testkit_env_path(env_type: "server"), :class => 'icon icon-add', :remote => :true %>
