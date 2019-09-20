@@ -129,7 +129,6 @@ class Testkit < ActiveRecord::Base
         users << principal
       end
     end
-    users << author
     users << assigned_to if assigned_to
     users.uniq.sort
   end
