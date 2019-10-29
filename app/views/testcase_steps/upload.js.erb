@@ -1,2 +1,12 @@
-$('#step_<%= @step.id %>').html('<%= escape_javascript(render :partial => "testcase_steps/step", :locals => { step: @step, attachments: @step.attachments, options: { editable: true, deletable: true, author: true }, thumbnails: false }) %>');
+<%
+  html = render :partial => "testcase_steps/step",
+    :locals =>
+      { 
+        step: @step, 
+        attachments: @step.attachments, 
+        options: { editable: true, deletable: true, author: true }, 
+        thumbnails: false 
+      } 
+%>
+$('#step_<%= @step.id %>').html('<%= escape_javascript(html) %>');
 hideModal();

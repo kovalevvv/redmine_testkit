@@ -2,7 +2,7 @@
 <div class="contextual">
   <%= link_to image_tag('edit.png'),
         container_attachments_edit_path(step),
-        :title => l(:label_edit_attachments) if options[:editable] %>
+        :title => l(:label_edit_attachments) if options[:editable] && attachments.present? %>
 </div>
 <% attachments.each do |attachment| %>
 <p class="attachment_<%= attachment.id %>"><%= link_to_attachment attachment, :class => 'icon icon-attachment', :download => true -%>

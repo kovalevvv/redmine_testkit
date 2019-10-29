@@ -104,6 +104,7 @@ class Testkit < ActiveRecord::Base
           new_testcase.steps << step.dup
         end
       new_testcase.run = true
+      new_testcase.issue_id = nil
       new_testcase.parent = testcase
       new_testcase.attachments = testcase.attachments.map do |attachement|
         attachement.copy(:container => new_testcase)

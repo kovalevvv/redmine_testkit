@@ -61,8 +61,8 @@
                   <td width="24%" align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :object => testcase %></td>
                   <td width="4%"><%= sf.select :status, Testcase.status_list.collect { |s| [s.capitalize, s, { :class => "#{s}_style" }] }, {}, :class => 'testkit_select_style step_select' %></td>
                   <td width="24%"><%= sf.text_area :result, :style => "width: 99%;" %></td>
-                  <td width="24%" align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :object => testcase %></td>
-                  <td width="24%" style="font-size: 90%;"><div id="step_<%= step.id %>"><%= render :partial => 'testcase_steps/step', 
+                  <td width="11%" align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :object => testcase %></td>
+                  <td width="11%" style="font-size: 90%;"><div id="step_<%= step.id %>"><%= render :partial => 'testcase_steps/step', 
                     :locals => { step: step, attachments: step.attachments,
                       options: { editable: true, deletable: true, author: true },
                       thumbnails: false } %></div>

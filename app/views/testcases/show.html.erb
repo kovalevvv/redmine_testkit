@@ -44,7 +44,7 @@
      <th>#</th>
      <th>Шаг</th>
      <th>Ожидаемый результат</th>
-     <%= "<th>Дополнительные данные</th>".html_safe unless @testcase.run %>
+     <%= "<th>Дополнительные данные</th>".html_safe if !@testcase.run && User.current.allowed_to?(:add_and_edit_testcases, @project) %>
      <%= "<th>Статус</th>".html_safe if @testcase.run %>
    </thead>
   <% @testcase.steps.each_with_index do |step,i| %>
@@ -57,7 +57,7 @@
       <td align="center"<%= " rowspan=#{rowspan}" if rowspan > 1 %>><%= i+1 %></td>
       <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.if, :attachments => @attachments, :object => @testcase %></td>
       <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.then, :attachments => @attachments, :object => @testcase %></td>
-      <% unless @testcase.run %>
+      <% if !@testcase.run && User.current.allowed_to?(:add_and_edit_testcases, @project) %>
         <td align="left" valign="top" style="vertical-align: top;"><%= textilizable step.info, :attachments => @attachments, :object => @testcase %></td>
       <% end %>
       <% if @testcase.run %>
