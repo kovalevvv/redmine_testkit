@@ -1,4 +1,4 @@
-<h3 class="title">Добавить файлы к шагу</h3>
+<h3 class="title"><%= l(:label_testkit_add_attachments_to_step) %></h3>
 <%= form_for @step, url: project_upload_file_to_step_path, :html => { :multipart => true }, :remote => true, :authenticity_token => true do |f| %>
   <div class="field" style="background: #FFD;">
     <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label><%= render :partial => 'attachments/form', :locals => {:container => @step} %></p>

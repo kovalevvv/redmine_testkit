@@ -1,16 +1,16 @@
 <% if @node.class.name == "TestcaseFolder" %>
 <ul>
-  <li><%= context_menu_link 'Добавить папку здесь', new_project_testcase_folder_path(parent_id: @node.id), :class => 'icon-add', :remote => true, :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
-  <li><%= context_menu_link 'Создать тест кейс', new_project_testcase_path(testcase: { folder_id: @node.id }), :class => 'icon-add', :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
-  <li><%= context_menu_link 'Редактировать', edit_project_testcase_folder_path(id: @node.id), :class => 'icon-edit', :remote => true, :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
-  <li><%= context_menu_link 'Удалить', project_testcase_folder_path(id: @node.id), :method => :delete, :class => 'icon-del', :disabled => @node.children.present? || @node.testcases.not_run.present? || !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
+  <li><%= context_menu_link l(:button_testkit_new_folder), new_project_testcase_folder_path(parent_id: @node.id), :class => 'icon-add', :remote => true, :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
+  <li><%= context_menu_link l(:label_new_testcase), new_project_testcase_path(testcase: { folder_id: @node.id }), :class => 'icon-add', :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
+  <li><%= context_menu_link l(:button_edit), edit_project_testcase_folder_path(id: @node.id), :class => 'icon-edit', :remote => true, :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
+  <li><%= context_menu_link l(:button_delete), project_testcase_folder_path(id: @node.id), :method => :delete, :class => 'icon-del', :disabled => @node.children.present? || @node.testcases.not_run.present? || !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
 </ul>
 <% end %>
 <% if @node.class.name == "Testcase" %>
 <ul>
-  <li><%= context_menu_link 'Редактировать', edit_project_testcase_path(id: @node.id), :class => 'icon-edit', :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
-  <li><%= context_menu_link 'Обзор', project_testcase_path(id: @node.id), :class => 'icon-zoom-in', :remote => true %></li>
-  <li><%= context_menu_link 'Копировать', copy_project_testcases_path(copy_from: @node.id), :class => 'icon-copy', :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
-  <li><%= context_menu_link 'Удалить', project_testcase_path(id: @node.id), :method => :delete, :class => 'icon-del', :disabled => @node.testkits.present? || Testcase.where(parent_id: @node.id).present? || !User.current.allowed_to?(:delete_testcases, @project) %></li>
+  <li><%= context_menu_link l(:button_edit), edit_project_testcase_path(id: @node.id), :class => 'icon-edit', :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
+  <li><%= context_menu_link l(:label_browse), project_testcase_path(id: @node.id, buttons: true), :class => 'icon-zoom-in', :remote => true %></li>
+  <li><%= context_menu_link l(:button_copy), copy_project_testcases_path(copy_from: @node.id), :class => 'icon-copy', :disabled => !User.current.allowed_to?(:add_and_edit_testcases, @project) %></li>
+  <li><%= context_menu_link l(:button_delete), project_testcase_path(id: @node.id), :method => :delete, :class => 'icon-del', :disabled => @node.testkits.present? || Testcase.where(parent_id: @node.id).present? || !User.current.allowed_to?(:delete_testcases, @project) %></li>
 </ul>
 <% end %>

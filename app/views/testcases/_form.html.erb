@@ -25,7 +25,7 @@
  <%= f.select :priority, options_for_select(Testcase.priorities_list.collect {|p| [t('select_priority_'+p), p] }, {:selected => @testcase.priority}) %>
 </p>
 <p>
-<%= f.label :duration %> <%= f.text_field :duration, style: "width: 50px" %> минут
+<%= f.label :duration %> <%= f.text_field :duration, style: "width: 50px" %> <%= l(:label_testkit_minutes) %>
 </p>
 <p>
 <%= f.label :issue %> <%= f.text_field :issue_id, { style: "width: 50px", :class => "relation_issue_field" } %>

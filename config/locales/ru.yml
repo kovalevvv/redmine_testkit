@@ -1,4 +1,23 @@
 ru:
+  button_testkit_delete: '[Удалить]'
+  label_testkit_extra_data: Дополнительные данные
+  label_testkit_expected_result: Ожидаемый результат
+  label_testkit_step: Шаг
+  label_testkit_minutes: минут
+  label_testkit_matches: совпадений
+  label_testkit_add_attachments_to_step: Добавить файлы к шагу
+  label_testkit_new_folder: Новый каталог
+  button_testkit_new_folder: Добавить папку здесь
+  label_are_you_sure_to_replase_template: Вы точно хотите заменить загруженный шаблон?
+  label_word_where_get_result: Доступны для выгрузки на странице отчета
+  label_word_other_templates: Другие шаблоны
+  label_default_template: Стандартный шаблон
+  label_setting_help_text: Все доступные переменные есть в стандартных шаблонах
+  label_word_conditional_structures: Условные операторы
+  label_how_to_add_variable: Как добавить переменные в .docx
+  label_word_teplates: Шаблоны документов
+  label_issue_reports: Отчеты тестирования
+  label_issue_testplans: Тест-планы для выполнения
   label_not_tested: Тестирование не проводилось
   button_restore: Восстановить
   confirm_restore: План тестирования будет перемещен
@@ -25,7 +44,6 @@ ru:
   label_selected_testcases: Выбранные сценарии
   label_testsuite_plural: Планы тестирования (Test Plan)
   label_run_plural: Выполнение планов тестирования (Test Run)
-  label_new_testcase: Добавить тестовый сценарий
   new_testcase: Новый тестовый сценарий
   label_testkit_envs: Окружения
   label_reports: Отчеты

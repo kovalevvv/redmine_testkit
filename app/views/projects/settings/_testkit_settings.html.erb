@@ -10,14 +10,14 @@
       <legend><%= l(:legend_testcase_prefix) %></legend>
       <p><%= testkit_setting_fields.text_field :testcase_prefix, :placeholder => 'TC' %></p>
     </fieldset>
-    <h3>Шаблоны документов</h3>
-    <p><a href="https://github.com/senny/sablon/blob/master/misc/TEMPLATE.md" target="_blank">Как добавить переменные в .docx</a></p>
-    <p><a href="https://github.com/senny/sablon#conditionals" target="_blank">Условные операторы</a></p>
-    <p>Все доступные переменные есть в стандартных шаблонах</p>
+    <h3><%= l(:label_word_teplates) %></h3>
+    <p><a href="https://github.com/senny/sablon/blob/master/misc/TEMPLATE.md" target="_blank"><%= l(:label_how_to_add_variable) %></a></p>
+    <p><a href="https://github.com/senny/sablon#conditionals" target="_blank"><%= l(:label_word_conditional_structures) %></a></p>
+    <p><%= l(:label_setting_help_text) %></p>
     <% TestkitSetting::avaliable_types.keys.each do |type| %>
       <fieldset>
         <legend><%= @project.testkit_setting.template_name(type) %></legend>
-        <p><%= link_to "Стандартный шаблон '#{@project.testkit_setting.template_name(type)}'",
+        <p><%= link_to "#{l(:label_default_template)} '#{@project.testkit_setting.template_name(type)}'",
           "/plugin_assets/redmine_testkit/docx_templates/#{TestkitSetting::avaliable_types[type][:filename]}",
           :class => 'icon', :style => 'background-image: url(/images/document.png);' %></p>
         <p><%= file_field_tag "[#{type}][dummy][file]", accept: '.docx', :class => 'dummy_file', data: {:present => @project.testkit_setting.send(type).present?} %></p>
@@ -35,8 +35,8 @@
     <% end %>
     
     <fieldset>
-      <legend>Другие шаблоны</legend>
-      <p>Доступны для выгрузки на странице отчета</p>
+      <legend><%= l(:label_word_other_templates) %></legend>
+      <p><%= l(:label_word_where_get_result) %></p>
       <%= link_to_attachments @project.testkit_setting, :thumbnails => false %>
       <p id="attachments_form"><label><%= l(:label_attachment_plural) %></label>
           <%= render :partial => 'common/attachments_form', :locals => { :container => @project.testkit_setting } %>
@@ -53,7 +53,7 @@
 
     $('.dummy_file').change(function(event) {
       if ($(this).attr('data-present') == "true") {
-        if (!window.confirm("Вы точно хотите заменить загруженный шаблон?")) {
+        if (!window.confirm("<%= l(:label_are_you_sure_to_replase_template) %>")) {
           $(this).val(null)
         }
       }

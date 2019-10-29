@@ -1,12 +1,11 @@
 <%= render 'testkits/tabs' %>
 
 <% if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
-
-<div class="buttons">
-  <%= link_to 'Добавить папку', new_project_testcase_folder_path, :class => 'icon testkit-folder-add', :remote => :true %>
-  <%= link_to l(:label_new_testcase), new_project_testcase_path(testcase: { folder_id: nil }), :class => 'icon testkit-testcase-add' %>
-</div>
-
+  <div class="buttons">
+    <%= link_to l(:label_testkit_new_folder), new_project_testcase_folder_path, :class => 'icon testkit-folder-add', :remote => :true %>
+    <%= link_to l(:label_new_testcase), new_project_testcase_path(testcase: { folder_id: nil }), :class => 'icon testkit-testcase-add' %>
+  </div>
+<% end %>
 
 <div class="box">
 <p style="width: 800px">
@@ -53,7 +52,7 @@ function updateTree() {
     <%= link_to_function l(:button_clear), '$("#tag_list").tagit("removeAll"); updateTree();', :class => 'icon icon-reload'  %>
   </span>
 </p>
-<% end %>
+
 <p>
   <input name="search" type="text" placeholder="<%= t(:description_search) %>..." autocomplete="off" id="search">
   <input type="button" id="btnResetSearch" value="<%= t(:button_reset) %>" disabled="true">
@@ -112,7 +111,7 @@ $(function() {
     n = tree.filterNodes(match)
     
     $('#btnResetSearch').attr("disabled", false)
-    $('#matches').text("(" + n + " совпадений)")
+    $('#matches').text("(" + n + " <%= l(:label_testkit_matches) %>)")
   }).focus();
 
   $('#btnResetSearch').click(function(e){

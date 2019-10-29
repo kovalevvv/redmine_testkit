@@ -3,7 +3,7 @@ $(document).on 'click', 'form .remove_steps', (event) ->
   $(this).closest('fieldset').hide()
   $(this).closest('fieldset').prev('div').hide()
   $('form > fieldset:visible').each (n,e) ->
-    $(e).find('th').first().html('Шаг '+(n+1))
+    $(e).find('th').first().html('<%= l(:label_testkit_step) %> '+(n+1))
     $(e).find('.position').val(n+1)
   event.preventDefault()
  
@@ -23,7 +23,7 @@ $(document).on 'click', 'form .add_steps', (event) ->
   textarea_then.draw()
   textarea_info.draw()
   $('form > fieldset:visible').each (n,e) ->
-    $(e).find('th').first().html('Шаг '+(n+1))
+    $(e).find('th').first().html('<%= l(:label_testkit_step) %> '+(n+1))
     $(e).find('.position').val(n+1)
   event.preventDefault()
   

@@ -1,9 +1,9 @@
 <fieldset class="step_fieldset">
   <table width="100%" style="table-layout: fixed;">
     <thead>
-      <th align="left">Шаг <%= f.options[:child_index]+1 %></th>
-      <th align="left">Ожидаемый результат</th>
-      <th align="left">Дополнительные данные</th>
+      <th align="left"><%= l(:label_testkit_step) %> <%= f.options[:child_index]+1 %></th>
+      <th align="left"><%= l(:label_testkit_expected_result) %></th>
+      <th align="left"><%= l(:label_testkit_extra_data) %></th>
     </thead>
     <tr>
       <td style="vertical-align: top; max-width: 35%; width: 35%; padding: 0px">
@@ -25,5 +25,5 @@
   </table> 
   <%= f.hidden_field :position, :value => f.options[:child_index]+1, :class => 'position' %>
   <%= f.hidden_field :_destroy %>
-  <%= link_to "[Удалить]", '#', :class => "remove_steps icon icon-del", style: "color: red; float: right" %>
+  <%= link_to l(:button_testkit_delete), '#', :class => "remove_steps icon icon-del", style: "color: red; float: right" %>
 </fieldset>
