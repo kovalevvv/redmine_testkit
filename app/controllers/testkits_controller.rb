@@ -14,6 +14,7 @@ class TestkitsController < ApplicationController
 
   def show_report
     @report = Testkit.find(params[:testkit_id])
+    @vars = Testkit::entities_clean_context(@report.context)
   end
 
   def index_reports

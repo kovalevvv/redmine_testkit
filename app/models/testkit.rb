@@ -50,6 +50,45 @@ class Testkit < ActiveRecord::Base
     end
   end
 
+  def context
+    {
+      project: self.project.name,
+      project_object: self.project.as_json,
+      report: self.as_json
+    }.merge!(:testcases => self.testcases.as_json(
+      {
+        :include => {
+          :issue => {
+            :include => {
+              :status => {},
+              :priority => {}
+            },
+            :methods => [:to_s]
+          },
+          :steps => {
+            :methods => [:if_doc, :then_doc],
+            :except => [:if, :then]
+          }
+        },
+        :methods => [:duration_text, :description_doc, :name_with_id, :current_id]
+      })
+    )
+  end
+
+  def self.entities_clean_context(obj)
+    if obj.is_a?(Hash)
+      obj.each do |k,v|
+        if v.is_a?(Hash)
+          obj[k] = self::entities_clean_context(v)
+        elsif v.is_a?(Array)
+          obj[k] = v.collect {|v| v.is_a?(Hash) ? self::entities_clean_context(v) : v }
+        elsif v.is_a?(Sablon::Content::HTML)
+          obj[k] = ActionController::Base.helpers.strip_tags HTMLEntities.new.decode(v.html_content)
+        end
+      end
+    end
+  end
+
   def report_result
     Testkit.where(id: self.id).joins(:testcases).group(:status).count
   end

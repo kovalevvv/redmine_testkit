@@ -89,16 +89,6 @@ class Testcase < ActiveRecord::Base
     n.to_html
   end
 
-  def as_json(options = {})
-    json = super(options)
-    json.merge!({
-      'issue_name' => issue.to_s,
-      'issue_status' => issue.status.name,
-      'issue_priority' => issue.priority.name
-    }) if issue
-    json
-  end
-
   def description_doc
     Sablon.content(:html, clear_text(self.description))
   end

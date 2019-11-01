@@ -1,5 +1,9 @@
 <%= render 'tabs' %>
 <h2>Отчет по тестированию: <%= @report.name %></h2>
+<fieldset class="collapsible collapsed">
+    <legend onclick="toggleFieldset(this);">Переменные для печатных форм</legend>
+    <div style="display: none;"><%= ap(@vars).html_safe %></div>
+  </fieldset>
 <div class="buttons">
   <%= link_to @project.testkit_setting.template_name(:test_report),
     project_testkit_export_path(project_id: @project.identifier, testkit_id: @report.id, type: :test_report), :class => 'icon icon-report' %>

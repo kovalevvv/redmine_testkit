@@ -12,7 +12,7 @@ ru:
   label_word_where_get_result: Доступны для выгрузки на странице отчета
   label_word_other_templates: Другие шаблоны
   label_default_template: Стандартный шаблон
-  label_setting_help_text: Все доступные переменные есть в стандартных шаблонах
+  label_setting_help_text: Список переменных можно посмотреть на странице отчета
   label_word_conditional_structures: Условные операторы
   label_how_to_add_variable: Как добавить переменные в .docx
   label_word_teplates: Шаблоны документов
