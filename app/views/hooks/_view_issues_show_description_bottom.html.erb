@@ -1,14 +1,18 @@
-<% if issue.testkits.present? || issue.found_in_testcase.present? || issue.testcase.present? || User.current.allowed_to?(:add_and_edit_testcases, @project) %>
+<% if issue.testkits.present? || issue.found_in_testcase.present? || issue.testcases.not_run.present? || User.current.allowed_to?(:add_and_edit_testcases, @project) %>
   <hr />
-  <% if issue.testcase.present? %>
+  <% if issue.testcases.not_run.present?
+    testcase = issue.testcases.not_run.take
+    link_path = { id: testcase.id, project_id: issue.project.identifier }
+    link_path.merge!({buttons: true}) if User.current.allowed_to?(:add_and_edit_testcases, @project)
+  %>
   <p>
     <strong>
       <%= l(:label_created_testcase) %>:
-      <%= link_to issue.testcase.name_with_id, project_testcase_path(id: issue.testcase.id, project_id: issue.project.identifier, buttons: true), :remote => true %>
+      <%= link_to testcase.name_with_id, project_testcase_path(link_path), :remote => true %>
     </strong>
   </p>
   <% else %>
-    <%= link_to l(:label_new_testcase), new_project_testcase_path(project_id: issue.project.identifier, :testcase => { issue_id: issue.id }), :class => 'icon icon-add' %>
+    <%= link_to l(:label_new_testcase), new_project_testcase_path(project_id: issue.project.identifier, :testcase => { issue_id: issue.id }), :class => 'icon icon-add' if User.current.allowed_to?(:add_and_edit_testcases, @project) %>
   <% end %>
   <% if issue.found_in_testcase.present? %>
   <p>

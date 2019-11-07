@@ -17,6 +17,7 @@ class Testkit < ActiveRecord::Base
   validates :assigned_to_id, :client_env, :env, presence: true, if: :run?
 
   scope :run, -> { where(run: true, done: false) }
+  scope :not_run, -> { where.not(run: true) }
   scope :report, -> { where(run: true, done: true) }
 
   def update_with_last_user_update(attributes)
@@ -143,7 +144,6 @@ class Testkit < ActiveRecord::Base
           new_testcase.steps << step.dup
         end
       new_testcase.run = true
-      new_testcase.issue_id = nil
       new_testcase.parent = testcase
       new_testcase.attachments = testcase.attachments.map do |attachement|
         attachement.copy(:container => new_testcase)
