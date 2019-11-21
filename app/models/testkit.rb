@@ -36,6 +36,8 @@ class Testkit < ActiveRecord::Base
     super.tap do |h|
       h[:author] = author.name
       h[:created_at] = format_time(created_at)
+      h[:start_datetime_local] = format_time(start_date)
+      h[:done_datetime_local] = format_time(done_date)
       h[:report_template] = parent.name
       h[:last_user_update] = last_user_update.name if last_user_update.present?
       h[:last_user_update_date] = format_time(last_user_update_date) if last_user_update_date
