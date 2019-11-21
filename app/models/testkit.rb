@@ -33,6 +33,15 @@ class Testkit < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   
   def as_json(*)
+  	if defined?(ActsAsTaggableOn::Tag)
+  		issues_tags = issues.present? ? ActsAsTaggableOn::Tag.joins(:taggings)
+  			.where(taggings: { taggable_type: 'Issue', taggable_id: issues}).collect(&:name).uniq.sort : []
+  		version_issues_tags = versions.present? ? ActsAsTaggableOn::Tag.joins(:taggings)
+  			.where(taggings: { taggable_type: 'Issue', taggable_id: versions.take.fixed_issues}).collect(&:name).uniq.sort : []
+  	else 
+  		issues_tags = version_issues_tags = []
+  	end
+    
     super.tap do |h|
       h[:author] = author.name
       h[:created_at] = format_time(created_at)
@@ -43,16 +52,19 @@ class Testkit < ActiveRecord::Base
       h[:last_user_update_date] = format_time(last_user_update_date) if last_user_update_date
       h[:assigned_to] = assigned_to.name
       h[:issues_list] = issues.map(&:to_s).join("\n") if issues.present?
+      h[:issues_tags] = issues_tags.join(", ")
       h[:issues_count] = issues.count if issues.present?
       h[:issues_count_all] = (issues.present? ? issues.count : 0) + (versions.present? ? versions.take.issues_count : 0)
       h[:version] = versions.take.as_json(:methods => [:due_date_localize, :to_s, :to_s_with_project]) if versions.present?
       h[:version_name] = '%s (%s)' % [versions.take.name, version_url(versions.take, host: 'https://repo.mos.ru')]  if versions.present?
       h[:version_issues_count] = versions.take.issues_count if versions.present?
       h[:version_isses_list] = versions.take.fixed_issues.map(&:to_s).join("\n") if versions.present?
+      h[:version_issues_tags] = version_issues_tags.join(", ")
       h[:time_evaluation] = distance_of_time_in_words(0, testcases.sum(:duration).minutes)
       h[:work_time] = distance_of_time_in_words(start_date, done_date) if done
       h[:start] = '%s, %s' % [user_start.name, format_time(start_date)] if user_start.present?
       h[:end] = '%s, %s' % [user_end.name, format_time(done_date)] if user_end.present?
+      h[:isses_and_version_tags] = (issues_tags + version_issues_tags).uniq.sort.join(", ")
       h[:comment] = comment.present? ? comment : nil
       h[:description] = description.present? ? description : nil
     end

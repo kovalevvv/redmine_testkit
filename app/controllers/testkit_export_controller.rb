@@ -14,7 +14,7 @@ class TestkitExportController < ApplicationController
     begin
       send_data template.render_to_string(context), filename: '%s-%s-%s-%s.docx' % [@project.name, docx_template[:title], @report.name, Date.current]
     rescue StandardError => e
-      render_error :message => e.message
+      render_error :message => ("%s <hr />%s" % [e.message, e.backtrace.join("<br />")]).html_safe
     end
   end
 
