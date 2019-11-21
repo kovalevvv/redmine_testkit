@@ -44,9 +44,10 @@ class Testkit < ActiveRecord::Base
       h[:assigned_to] = assigned_to.name
       h[:issues_list] = issues.map(&:to_s).join("\n") if issues.present?
       h[:issues_count] = issues.count if issues.present?
-      h[:issues_count_all] = (issues.present? ? issues.count : 0) + (versions.present? ? versions.take.fixed_issues.count : 0)
+      h[:issues_count_all] = (issues.present? ? issues.count : 0) + (versions.present? ? versions.take.issues_count : 0)
+      h[:version] = versions.take.as_json(:methods => [:due_date_localize, :to_s, :to_s_with_project]) if versions.present?
       h[:version_name] = '%s (%s)' % [versions.take.name, version_url(versions.take, host: 'https://repo.mos.ru')]  if versions.present?
-      h[:version_issues_count] = versions.take.fixed_issues.count if versions.present?
+      h[:version_issues_count] = versions.take.issues_count if versions.present?
       h[:version_isses_list] = versions.take.fixed_issues.map(&:to_s).join("\n") if versions.present?
       h[:time_evaluation] = distance_of_time_in_words(0, testcases.sum(:duration).minutes)
       h[:work_time] = distance_of_time_in_words(start_date, done_date) if done
@@ -63,7 +64,6 @@ class Testkit < ActiveRecord::Base
       :project_object => self.project.as_json,
       :report => self.as_json({
       	:include => {
-      		:versions => {},
       		:issues => {},
       	}
       }),
