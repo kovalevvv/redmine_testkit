@@ -34,30 +34,38 @@ class Testkit < ActiveRecord::Base
   
   def as_json(*)
     super.tap do |h|
-      h["author"] = author.name
-      h["created_at"] = format_time(created_at)
-      h["report_template"] = parent.name
-      h["last_user_update"] = last_user_update.name if last_user_update.present?
-      h["last_user_update_date"] = format_time(last_user_update_date) if last_user_update_date
-      h["assigned_to"] = assigned_to.name
-      h["issues"] = issues.map(&:to_s).join(", ") if issues.present?
-      h["version"] = '%s (%s)' % [versions.take.name, version_url(versions.take, host: 'https://repo.mos.ru')]  if versions.present?
-      h["time_evaluation"] = distance_of_time_in_words(0, testcases.sum(:duration).minutes)
-      h["work_time"] = distance_of_time_in_words(start_date, done_date) if done
-      h["start"] = '%s, %s' % [user_start.name, format_time(start_date)] if user_start.present?
-      h["end"] = '%s, %s' % [user_end.name, format_time(done_date)] if user_end.present?
-      h["comment"] = comment.present? ? comment : nil
-      h["description"] = description.present? ? description : nil
+      h[:author] = author.name
+      h[:created_at] = format_time(created_at)
+      h[:report_template] = parent.name
+      h[:last_user_update] = last_user_update.name if last_user_update.present?
+      h[:last_user_update_date] = format_time(last_user_update_date) if last_user_update_date
+      h[:assigned_to] = assigned_to.name
+      h[:issues_list] = issues.map(&:to_s).join("\n") if issues.present?
+      h[:issues_count] = issues.count if issues.present?
+      h[:issues_count_all] = (issues.present? ? issues.count : 0) + (versions.present? ? versions.take.fixed_issues.count : 0)
+      h[:version_name] = '%s (%s)' % [versions.take.name, version_url(versions.take, host: 'https://repo.mos.ru')]  if versions.present?
+      h[:version_issues_count] = versions.take.fixed_issues.count if versions.present?
+      h[:version_isses_list] = versions.take.fixed_issues.map(&:to_s).join("\n") if versions.present?
+      h[:time_evaluation] = distance_of_time_in_words(0, testcases.sum(:duration).minutes)
+      h[:work_time] = distance_of_time_in_words(start_date, done_date) if done
+      h[:start] = '%s, %s' % [user_start.name, format_time(start_date)] if user_start.present?
+      h[:end] = '%s, %s' % [user_end.name, format_time(done_date)] if user_end.present?
+      h[:comment] = comment.present? ? comment : nil
+      h[:description] = description.present? ? description : nil
     end
   end
 
   def context
     {
-      project: self.project.name,
-      project_object: self.project.as_json,
-      report: self.as_json
-    }.merge!(:testcases => self.testcases.as_json(
-      {
+      :project => self.project.name,
+      :project_object => self.project.as_json,
+      :report => self.as_json({
+      	:include => {
+      		:versions => {},
+      		:issues => {},
+      	}
+      }),
+    	:testcases => self.testcases.as_json({
         :include => {
           :issue => {
             :include => {
@@ -73,7 +81,7 @@ class Testkit < ActiveRecord::Base
         },
         :methods => [:duration_text, :description_doc, :name_with_id, :current_id]
       })
-    )
+    }
   end
 
   def self.entities_clean_context(obj)
