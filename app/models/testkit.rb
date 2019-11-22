@@ -67,6 +67,7 @@ class Testkit < ActiveRecord::Base
       h[:isses_and_version_tags] = (issues_tags + version_issues_tags).uniq.sort.join(", ")
       h[:comment] = comment.present? ? comment : nil
       h[:description] = description.present? ? description : nil
+      h[:date_current] = Date.current.to_s
     end
   end
 
