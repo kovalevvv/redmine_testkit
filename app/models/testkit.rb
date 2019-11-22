@@ -77,7 +77,9 @@ class Testkit < ActiveRecord::Base
       :project_object => self.project.as_json,
       :report => self.as_json({
       	:include => {
-      		:issues => {},
+      		:issues => {
+            :methods => [:tag_list, :tag_list_string]
+          },
       	}
       }),
     	:testcases => self.testcases.as_json({
