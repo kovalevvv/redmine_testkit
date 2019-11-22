@@ -94,7 +94,7 @@ class Testkit < ActiveRecord::Base
             :except => [:if, :then]
           }
         },
-        :methods => [:duration_text, :description_doc, :name_with_id, :current_id]
+        :methods => [:duration_text, :description_doc, :name_with_id, :current_id, :priority_translate]
       })
     }
   end

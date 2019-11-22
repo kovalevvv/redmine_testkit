@@ -93,6 +93,10 @@ class Testcase < ActiveRecord::Base
     Sablon.content(:html, clear_text(self.description))
   end
 
+  def priority_translate
+    I18n.t "select_priority_#{priority}".to_sym
+  end
+
   def chart_values
     values = steps.order_as_specified(status: Testcase.status_list).pluck(:status)
     counts = {pass: 0, fail: 0, blocked: 0, not_run: 0}
