@@ -16,6 +16,10 @@ class TestcaseStep < ActiveRecord::Base
     Sablon.content(:html, @testcase.clear_text(self.then))
   end
   
+  def info_doc
+    Sablon.content(:html, @testcase.clear_text(self.info))
+  end
+
   def attachments_editable?(user=User.current)
     true
   end

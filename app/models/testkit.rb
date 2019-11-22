@@ -90,7 +90,7 @@ class Testkit < ActiveRecord::Base
             :methods => [:to_s]
           },
           :steps => {
-            :methods => [:if_doc, :then_doc],
+            :methods => [:if_doc, :then_doc, :info_doc],
             :except => [:if, :then]
           }
         },
